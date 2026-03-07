@@ -6,22 +6,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
-    <center>
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4" style="margin-top:30px">
-                <form action="{{ route('admin.home') }}" method="">
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
                     <h>Academic portal</h>
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" placeholder="Enter username" name="username">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="off" class="form-control" placeholder="Enter Email">
+                        <span class="text-danger">@error('name') {{ $message }} @enderror</span>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" placeholder="password" name="password">
+                        <input type="password" name="password" required class="form-control" placeholder="password">
+                        <span class="text-danger">@error('password') {{ $message }} @enderror</span>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-block btn-primary" type="submit">Login</button>
+                        <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
                     <br>
                     <a href="forgotPassword">Forgot password?</a>
@@ -29,7 +31,6 @@
             </div>
         </div>
     </div>
-    </center>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
