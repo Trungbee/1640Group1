@@ -1,0 +1,55 @@
+Hướng dẫn chạy code sau khi pull từ github
+1. New terminal
+- Tạo new terminal -> "cd 1640Group1" -> "composer install"
+- Nếu hiện lỗi "does not have vendor folder" -> xóa composer rồi tải lại -> chạy lại "composer install"
+- Chạy composer install thành công -> "php artisan key:generate"
+
+2. Sửa lại file .env.example 
+- Tìm file ".env.example" -> Rename thành ".env"
+- Trong file ".env" Tìm đoạn:
+    "DB_Connection=...
+    DB_Host=...
+    ..."
+- Thay thế bằng:
+    "DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_DATABASE=1640Group1
+    DB_USERNAME=postgres
+    DB_PASSWORD=123456"
+
+3. Sửa file config/database.php (Nếu cần thiết)
+- Kiểm tra dòng "'default' => env('DB_CONNECTION', 'pgsql' )"
+- Nếu không phải 'pgsql' thì sửa thành 'pgsql'
+- Kiểm tra đoạn:
+    'pgsql' => [
+                'driver' => 'pgsql',
+                'url' => env('DB_URL'),
+                'host' => env('DB_HOST', '127.0.0.1'),
+                'port' => env('DB_PORT', '5432'),
+                'database' => env('DB_DATABASE', '1540Group1'),
+                'username' => env('DB_USERNAME', 'postgres'),
+                'password' => env('DB_PASSWORD', '123456'),
+                'charset' => env('DB_CHARSET', 'utf8'),
+                'prefix' => '',
+                'prefix_indexes' => true,
+                'search_path' => 'public',
+                'sslmode' => env('DB_SSLMODE', 'prefer'),
+            ],
+- Nếu có gì không đúng thì sửa lại
+
+4. Tải postgressql và pgadmin4 (Có thể bỏ qua nếu đã có)
+- postgressql v18.3
+- pgadmin4 v9.12
+- đặt password = 123456
+
+5. Mở pgadmin4 (Có thể bỏ qua nếu đã làm trước đó)
+- Chuột phải vào "Server" -> Register -> Server
+- Name = 1640Group1Server
+- Trong Connection: hostname/address = local host | Username = postgres | password = 123456 | bật save password
+
+- Trong 1640Group1Server, chuột phải vào database -> Create -> database -> Database = 1640Group1
+
+6. Về lại VS code
+- Trong terminal, chạy "php artisan migrate"
+- chạy "php artisan serve" Để chạy code

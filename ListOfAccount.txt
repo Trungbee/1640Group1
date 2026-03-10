@@ -1,0 +1,4 @@
+Chưa hoàn thiện 
+
+khi đăng nhập sẽ vào giao diện admin
+chỉ cần đúng format "example@gmail.com" là đăng nhập đc
