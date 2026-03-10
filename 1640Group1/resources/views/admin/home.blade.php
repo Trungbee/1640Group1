@@ -93,7 +93,7 @@
 <div class="login-container">
     <div class="row g-0">
         <div class="col-md-6 login-sidebar d-none d-md-flex">
-            <img src="https://cdni.iconscout.com/illustration/premium/thumb/female-student-working-on-laptop-illustration-download-in-svg-png-gif-formats--girl-study-at-home-pack-people-illustrations-4712499.png" alt="Welcome Illustration" class="illustration">
+            <img src="https://tse4.mm.bing.net/th/id/OIP.Vz3Ijf4o6TBKRvx2gZiqDwHaB2?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Welcome Illustration" class="illustration">
         </div>
 
         <div class="col-md-6 login-form-section">

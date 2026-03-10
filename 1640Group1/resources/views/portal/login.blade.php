@@ -109,14 +109,14 @@
     <div class="row g-0">
         <div class="col-md-6 login-sidebar d-none d-md-flex">
             <a href="#" class="back-button">‹</a>
-            <img src="https://cdni.iconscout.com/illustration/premium/thumb/online-education-2112443-1778939.png" alt="Illustration" class="illustration">
+            <img src="https://tse4.mm.bing.net/th/id/OIP.Vz3Ijf4o6TBKRvx2gZiqDwHaB2?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Illustration" class="illustration">
         </div>
 
         <div class="col-md-6 login-form-section">
             <div class="university-url">🌐 www.universityname.ac.in</div>
 
             <div class="text-center">
-                <img src="https://cdn-icons-png.flaticon.com/512/3449/3449692.png" alt="Logo" class="university-logo">
+                <img src="https://tse4.mm.bing.net/th/id/OIP.Vz3Ijf4o6TBKRvx2gZiqDwHaB2?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" class="university-logo">
                 <h4 class="fw-bold mb-1">UNIVERSITY NAME</h4>
                 <p class="text-primary small fw-bold mb-5">STUDENT PANEL</p>
             </div>
