@@ -14,9 +14,8 @@ Route::get('/admin/home', [AdminController::class,'home'])->name('admin.home');
 Route::get('/admin/newUser', [AdminController::class,'newUser'])->name('admin.newUser');
 Route::get('/admin/userManangement', [AdminController::class,'userManagement'])->name('admin.userManagement');
 Route::get('/admin/dashboard', [AdminController::class,'dashboard'])->name('admin.dashboard');
-
-Route::get('/staff/home', [StaffController::class,'home'])->name('staff.home');
-
+Route::get('/admin/socialmedia', [AdminController::class,'socialmedia'])->name('admin.socialmedia');
+Route::get('/admin/staffmanagement', [AdminController::class,'staffmanagement'])->name('admin.staffmanagement');
 
 Route::middleware('guest')->group(function (){
     Route::View('/', 'portal.login')->name('login.show');
@@ -27,5 +26,5 @@ Route::middleware('guest')->group(function (){
 
     Route::get('/resetPassword/{token}', [PortalController::class, 'showResetPassword'])->name('password.reset');
     Route::post('/resetPassword', [PortalController::class, 'resetPassword'])->name('password.update');
-
+    
 });

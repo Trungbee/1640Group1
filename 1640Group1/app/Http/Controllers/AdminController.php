@@ -18,4 +18,12 @@ class AdminController
     public function dashboard(){
         return view("admin.dashboard");
     }
+    public function socialmedia()
+    {
+        return view('admin.socialmedia');
+    }
+    public function staffmanagement()
+    {
+        return view('admin.staffmanagement');
+    }
 }
