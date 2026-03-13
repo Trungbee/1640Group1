@@ -120,8 +120,13 @@
                 <p class="text-muted small">Create a new student or staff profile in the system.</p>
             </div>
 
-            <form action="" method="POST">
+            <form action="{{ route('createNewUser') }}" method="POST">
                 @csrf
+
+                <div class="mb-2">
+                    <label>Full name</label>
+                    <input type="text" name="name" class="form-control" placeholder="" required>
+                </div>
 
                 <div class="mb-2">
                     <label>Email Address</label>
@@ -129,18 +134,16 @@
                 </div>
 
                 <div class="mb-2">
-                    <label>Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="johndoe123" required>
-                </div>
-
-                <div class="mb-2">
                     <label>Initial Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    <input type="password" name="password" class="form-control" placeholder="" required>
                 </div>
 
                 <div class="mb-2">
-                    <label>Confirm Password</label>
-                    <input type="password" name="password_confirmation" class="form-control" placeholder="••••••••" required>
+                    <label class="form-label-custom">Choose role</label>
+                    <select name="role" class="form-control form-control-custom" style="background-color: white; border: 1px solid #ccc;">
+                        <option value="staff">Staff</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-create">Create Account</button>

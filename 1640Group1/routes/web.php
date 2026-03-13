@@ -12,10 +12,13 @@ Route::get('/newPassword',[PortalController::class,'newPassword'])->name('newPas
 
 Route::get('/admin/home', [AdminController::class,'home'])->name('admin.home');
 Route::get('/admin/newUser', [AdminController::class,'newUser'])->name('admin.newUser');
+Route::post('/admin/newUser', [AdminController::class, 'createNewUser'])->name('createNewUser');
 Route::get('/admin/userManangement', [AdminController::class,'userManagement'])->name('admin.userManagement');
 Route::get('/admin/dashboard', [AdminController::class,'dashboard'])->name('admin.dashboard');
 
 Route::get('/staff/home', [StaffController::class,'home'])->name('staff.home');
+Route::get('/staff/authSetup', [StaffController::class,'authSetup'])->name('staff.authSetup');
+Route::post('/staff/authSetup', [StaffController::class, 'authQuestionSetup'])->name('createAuthAnswer');
 
 
 Route::middleware('guest')->group(function (){
