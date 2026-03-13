@@ -15,11 +15,8 @@ Route::get('/admin/newUser', [AdminController::class,'newUser'])->name('admin.ne
 Route::post('/admin/newUser', [AdminController::class, 'createNewUser'])->name('createNewUser');
 Route::get('/admin/userManangement', [AdminController::class,'userManagement'])->name('admin.userManagement');
 Route::get('/admin/dashboard', [AdminController::class,'dashboard'])->name('admin.dashboard');
-
-Route::get('/staff/home', [StaffController::class,'home'])->name('staff.home');
-Route::get('/staff/authSetup', [StaffController::class,'authSetup'])->name('staff.authSetup');
-Route::post('/staff/authSetup', [StaffController::class, 'authQuestionSetup'])->name('createAuthAnswer');
-
+Route::get('/admin/socialmedia', [AdminController::class,'socialmedia'])->name('admin.socialmedia');
+Route::get('/admin/staffmanagement', [AdminController::class,'staffmanagement'])->name('admin.staffmanagement');
 
 Route::middleware('guest')->group(function (){
     Route::View('/', 'portal.login')->name('login.show');

@@ -1,38 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Academic Portal')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f4f7fe; display: flex; min-height: 100vh; margin: 0; }
-        .sidebar { width: 260px; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.05); padding: 20px; position: fixed; height: 100vh; }
-        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 30px; }
-        .nav-link { color: #6c757d; padding: 10px 15px; border-radius: 8px; margin-bottom: 5px; text-decoration: none; display: block; }
-        .nav-link:hover, .nav-link.active { background: #e9f2ff; color: #2b99d6; }
-        .header-box { background: linear-gradient(135deg, #2b99d6, #1a7bb3); color: white; padding: 30px; border-radius: 15px; margin-bottom: 25px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home | Academic Portal</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+
+body{
+font-family:'Inter',sans-serif;
+background:#f4f7fe;
+margin:0;
+display:flex;
+}
+
+/* Sidebar */
+
+.sidebar{
+width:280px;
+height:100vh;
+background:white;
+padding:20px;
+position:fixed;
+box-shadow:2px 0 10px rgba(0,0,0,0.05);
+display:flex;
+flex-direction:column;
+}
+
+.university-brand{
+padding:20px 10px;
+border-bottom:1px solid #f0f0f0;
+margin-bottom:20px;
+}
+
+.nav-link{
+color:#6c757d;
+padding:12px 15px;
+border-radius:10px;
+margin-bottom:5px;
+transition:0.3s;
+display:flex;
+align-items:center;
+}
+
+.nav-link i{
+margin-right:12px;
+font-size:1.2rem;
+}
+
+.nav-link:hover,
+.nav-link.active{
+background:#e9f2ff;
+color:#2b99d6;
+}
+
+/* Main content */
+
+.main-content{
+margin-left:280px;
+padding:40px;
+width:calc(100% - 280px);
+}
+
+.top-bar{
+display:flex;
+justify-content:flex-end;
+align-items:center;
+margin-bottom:30px;
+gap:20px;
+}
+
+.profile-img{
+width:45px;
+height:45px;
+border-radius:50%;
+object-fit:cover;
+}
+
+/* card */
+
+.stat-card{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 4px 6px rgba(0,0,0,0.02);
+transition:0.3s;
+}
+
+.stat-card:hover{
+transform:translateY(-5px);
+box-shadow:0 8px 15px rgba(0,0,0,0.05);
+}
+
+.chart-title{
+text-align:center;
+font-weight:600;
+margin-top:15px;
+}
+
+</style>
+
 </head>
+
 <body>
-    <div class="sidebar">
-        <div class="mb-4 px-2">
-            <h5 class="fw-bold text-primary">PORTAL</h5>
-        </div>
-        <nav>
-            <a href="{{ route('home') }}" class="nav-link {{ request()->is('home') ? 'active' : '' }}">
-                <i class="bi bi-house-door me-2"></i> Home
-            </a>
-            <div class="mt-3 small text-muted px-3 text-uppercase fw-bold">Accounts</div>
-            <a href="/user-management" class="nav-link">
-                <i class="bi bi-people me-2"></i> Manage User
-            </a>
-            <a href="/new-user" class="nav-link">
-                <i class="bi bi-person-plus me-2"></i> Create New User
-            </a>
-        </nav>
-    </div>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<div class="university-brand">
+<h5 class="fw-bold mb-0 text-primary">
+<i class="bi bi-mortarboard-fill"></i> ACADEMIC
+</h5>
+<small class="text-muted">Student Management</small>
+</div>
+
+<nav class="nav flex-column flex-grow-1">
+
+<a class="nav-link" href="{{ route('admin.dashboard') }}">
+<i class="bi bi-speedometer2"></i> Dashboard
+</a>
+
+<a class="nav-link" href="{{ route('admin.socialmedia') }}">
+<i class="bi bi-book"></i> Social Media management
+</a>
+
+<a class="nav-link" href="{{ route('admin.staffmanagement') }}">
+<i class="bi bi-calendar-event"></i> Staff management
+</a>
+
+</nav>
+
+
+<div class="mt-auto">
+<a class="nav-link" href="/logout">
+<i class="bi bi-box-arrow-left"></i> Logout
+</a>
+</div>
+
+</div>
+
+<!-- Main Content -->
+
+<div class="main-content">
+
+<!-- top profile -->
+
+<div class="top-bar">
+
+<div class="text-end me-2">
+<p class="mb-0 fw-bold small">John Doe</p>
+<small class="text-muted">Student ID: 2024001</small>
+</div>
+
+<img src="https://i.pravatar.cc/150?u=john" class="profile-img">
+
+</div>
+
+
+<div class="row g-4">
 
     <div class="main-content">
         @yield('content')
