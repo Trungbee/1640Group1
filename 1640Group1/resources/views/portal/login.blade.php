@@ -121,13 +121,11 @@
                 <p class="text-primary small fw-bold mb-5">STUDENT PANEL</p>
             </div>
 
-            <form method="POST" action="{{ route('login') }}">
-                {{-- @if(Session::has('success'))
-                <div class="alert alert-success">{{ Session::get('success') }}</div>
-                @endif()
-                @if(Session::has('success'))
+            {{-- @if(Session::has('fail'))
                 <div class="alert alert-danger">{{ Session::get('fail') }}</div>
                 @endif() --}}
+
+            <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-4">
                     <label class="text-muted small">Enrollment number</label>
@@ -144,7 +142,7 @@
                         <input class="form-check-input" type="checkbox" id="remember" name="remember">
                         <label class="form-check-label text-muted" for="remember">Remember me</label>
                     </div>
-                    <a href="forgotPassword" class="text-decoration-none text-muted">Forgot Password?</a>
+                    <a href="{{ route('forgotPassword') }}" class="text-decoration-none text-muted">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-signin">Sign in</button>

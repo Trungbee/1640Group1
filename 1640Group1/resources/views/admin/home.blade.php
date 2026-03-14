@@ -131,9 +131,14 @@
             </div>
 
             <div class="text-center">
-                <a href="{{ route('login') }}" class="btn-logout d-inline-block">
+                <a href="{{ route('logout') }}" class="btn-logout d-inline-block"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="bi bi-box-arrow-left"></i> Logout System
                 </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </div>
     </div>
