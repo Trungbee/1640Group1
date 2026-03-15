@@ -121,30 +121,39 @@
 
         <div class="col-md-6 login-form-section">
             <div class="university-url">🌐 www.universityname.ac.in</div>
-            
+
             <div class="mb-4">
                 <h3 class="fw-bold mb-2">Retrieve password</h3>
-                <p class="instruction-text">Enter your email to receive a 6-digit verification code.</p>
             </div>
 
-            <form action="newPassword" method="GET">
-                <div class="mb-4">
-                    <label class="text-muted small fw-bold">Email address</label>
-                    <div class="d-flex gap-2">
-                        <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
-                        <button type="button" class="btn btn-outline-primary btn-send-code">Send code</button>
-                    </div>
+            @if(session('error'))
+            <div class="alert-error">
+            {{ session('error') }}
+            </div>
+            @endif
+            <form method="POST" action="{{ route('verifyQuestion') }}">
+                @csrf
+                <div class="mb-2">
+                    <label>Email address</label>
+                    <input type="email" name="email" class="form-control" placeholder="" required>
                 </div>
-
-                <div class="mb-4">
-                    <label class="text-muted small fw-bold">Verification Code</label>
-                    <input type="text" name="code" class="form-control" placeholder="Enter Code" required>
+                <div class="mb-2">
+                    <label class="form-label-custom">Choose question</label>
+                    <select name="security_question" class="form-control form-control-custom" style="background-color: white; border: 1px solid #ccc;">
+                        <option value="favorite_animal">What is your favorite animal?</option>
+                        <option value="favorite_color">What is your favorite color?</option>
+                        <option value="child_birth_year">What is your child birth year?</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label>Answer</label>
+                    <input type="text" name="answer" class="form-control" placeholder="" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-verify text-uppercase">Verify & Continue</button>
-                
+
                 <div class="text-center mt-4">
-                    <a href="login" class="text-decoration-none text-muted small">Back to Login</a>
+                    <a href="{{ route('login') }}" class="text-decoration-none text-muted small">Back to Login</a>
                 </div>
             </form>
         </div>

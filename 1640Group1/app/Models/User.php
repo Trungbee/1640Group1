@@ -9,26 +9,20 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    protected $primaryKey = 'userId';
     use HasFactory, Notifiable;
 
-    // 1. Báo cho Laravel biết khóa chính của bảng là 'userId' (thay vì 'id' mặc định)
-    protected $primaryKey = 'userId';
-
-    /** * The attributes that are mass assignable.
+    /**
+     * The attributes that are mass assignable.
      *
      * @var list<string>
      */
-    // 2. Mở khóa cho phép lưu dữ liệu vào các cột tùy chỉnh
     protected $fillable = [
         'username',
         'fullName',
         'phone',
         'email',
-        'passwordHash',
-        'role',
-        'acceptTerms',
-        'isActive',
+        'password',
     ];
 
     /**
@@ -36,17 +30,14 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var list<string>
      */
-    // 3. Ẩn cột 'passwordHash' khi truy xuất dữ liệu người dùng (để bảo mật)
     protected $hidden = [
         'passwordHash',
         'remember_token',
+        'favorite_animal',
+        'favorite_color',
+        'child_birth_year',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

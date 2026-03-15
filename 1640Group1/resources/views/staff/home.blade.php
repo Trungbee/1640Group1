@@ -106,7 +106,7 @@
             <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-mortarboard-fill"></i> ACADEMIC</h5>
             <small class="text-muted">Student Management</small>
         </div>
-        
+
         <nav class="nav flex-column flex-grow-1">
             <a class="nav-link active" href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
             <a class="nav-link" href="#"><i class="bi bi-book"></i> Courses</a>
@@ -116,7 +116,7 @@
         </nav>
 
         <div class="mt-auto">
-            <a class="nav-link text-danger" href="/logout"><i class="bi bi-box-arrow-left"></i> Logout</a>
+            <a class="{{ route('login') }}" href="/logout"><i class="bi bi-box-arrow-left"></i> Logout</a>
         </div>
     </div>
 

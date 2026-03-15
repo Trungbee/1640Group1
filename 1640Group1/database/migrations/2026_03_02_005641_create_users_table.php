@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Container\Attributes\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,15 +15,14 @@ public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('userId');
-            $table->string('username')->unique(); // Sửa lỗi: Thêm cặp ngoặc ()
-            $table->string('fullName')->nullable(); // Cho phép rỗng vì form không nhập
-            $table->string('phone'); // THÊM MỚI: Cột số điện thoại
-            $table->string('email')->unique(); // Sửa lỗi: Thêm cặp ngoặc ()
+            $table->string('username')->unique;
+            $table->string('fullName');
+            $table->string('email')->unique;
             $table->timestamp('email_verified_at')->nullable();
             $table->string('passwordHash');
             $table->string('role');
-            $table->boolean('acceptTerms')->default(false); // Thêm giá trị mặc định
-            $table->boolean('isActive')->default(true); // Thêm giá trị mặc định (tài khoản mới mặc định được kích hoạt)
+            $table->boolean('acceptTerms');
+            $table->boolean('isActive');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -41,6 +42,7 @@ public function up(): void
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
     }
 
     /**

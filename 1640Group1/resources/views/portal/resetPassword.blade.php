@@ -110,13 +110,13 @@
 
         <div class="col-md-6 login-form-section">
             <div class="university-url">🌐 www.universityname.ac.in</div>
-            
+
             <div class="mb-4">
                 <h3 class="fw-bold mb-2">Create new password</h3>
                 <p class="instruction-text">Your new password must be different from previous used passwords.</p>
             </div>
 
-            <form action="{{ route('password.update') }}" method="POST">
+            <form action="{{ route('passwordReset') }}" method="POST">
                 @csrf
                 <div class="mb-4">
                     <label class="text-muted small fw-bold">New password</label>
@@ -129,7 +129,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-change text-uppercase">Change Password</button>
-                
+
                 <div class="text-center mt-4">
                     <a href="{{ route('login') }}" class="text-decoration-none text-muted small">Back to Login</a>
                 </div>

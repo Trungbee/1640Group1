@@ -118,16 +118,16 @@
 <div class="login-container">
     <div class="row g-0">
         <div class="col-md-6 login-sidebar d-none d-md-flex">
-            <a href="/home" class="back-button">‹</a>
+            <a href="{{ route('admin.home') }}" class="back-button">‹</a>
             <img src="https://cdni.iconscout.com/illustration/premium/thumb/data-management-4346045-3614136.png" alt="Management Illustration" class="illustration">
         </div>
 
         <div class="col-md-6 login-form-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <span class="admin-badge">Admin Control</span>
-                <a href="/home" class="btn-home"><i class="bi bi-house"></i> Home</a>
+                <a href="{{ route('admin.home') }}" class="btn-home"><i class="bi bi-house"></i> Home</a>
             </div>
-            
+
             <div class="mb-5">
                 <h3 class="fw-bold mb-1">Management</h3>
                 <p class="text-muted small">Select a module to manage your portal system.</p>

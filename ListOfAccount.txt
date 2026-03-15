@@ -1,4 +1,9 @@
-Chưa hoàn thiện 
+1. Setup database
+    Mở terminal -> cd 1640Group1 -> php artisan migrate:fresh -> php artisan db:seed
 
-khi đăng nhập sẽ vào giao diện admin
-chỉ cần đúng format "example@gmail.com" là đăng nhập đc
+2. List of account
+    Admin: 
+    - tk: admin@gmail.com - mk: admin
+    Staff:
+    - tk: staff1@gmail.com - mk: staff
+    - tk: staff2@gmail.com - mk: staff2     (Recommended on using)
