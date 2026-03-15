@@ -114,18 +114,34 @@
 
         <div class="col-md-6 login-form-section">
             <div class="university-url">🌐 www.universityname.ac.in</div>
-            
+
             <div class="text-center">
                 <img src="https://cdn-icons-png.flaticon.com/512/3449/3449692.png" alt="Logo" class="university-logo">
                 <h4 class="fw-bold mb-1">UNIVERSITY NAME</h4>
-                <p class="text-primary small fw-bold mb-5">STUDENT PANEL</p>
+                <p class="text-primary small fw-bold mb-4">STUDENT PANEL</p>
             </div>
+
+            @if (session('success'))
+                <div class="alert alert-success text-center py-2" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger py-2" role="alert">
+                    <ul class="mb-0" style="padding-left: 15px; font-size: 14px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-4">
-                    <label class="text-muted small">Enrollment number</label>
-                    <input type="text" name="email" class="form-control" placeholder="Enter Enrollment number" required>
+                    <label class="text-muted small">Email Address</label>
+                    <input type="text" name="email" class="form-control" placeholder="Enter Email Address" value="{{ old('email') }}" required>
                 </div>
 
                 <div class="mb-3 position-relative">
@@ -143,6 +159,12 @@
 
                 <button type="submit" class="btn btn-primary w-100 btn-signin">Sign in</button>
             </form>
+
+            <div class="text-center mt-3">
+                <span class="text-muted small">Don't have an account? </span>
+                <a href="/sign-up" class="text-decoration-none small fw-bold" style="color: #2b99d6;">Sign up here</a>
+            </div>
+
         </div>
     </div>
 </div>
