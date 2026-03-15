@@ -97,49 +97,31 @@
         </div>
 
         <div class="col-md-6 login-form-section">
-            <div class="university-url">🌐 Dashboard v1.0</div>
-
             <div class="mb-5">
-                <h3 class="fw-bold mb-1">Welcome back!</h3>
-                <p class="text-muted">Academic Portal Homepage</p>
+                <h3 class="fw-bold mb-1">Finish setting up for your account</h3>
+                <p class="text-muted">Questions to retrieve your password</p>
             </div>
 
-            <div class="menu-list">
-                <a href="{{ route('admin.userManagement') }}" class="home-menu-item">
-                    <i class="bi bi-people"></i>
-                    <div>
-                        <div class="fw-bold">Manage Accounts</div>
-                        <div class="small text-muted">View and edit user permissions</div>
-                    </div>
-                </a>
+            <form action="{{ route('createAuthAnswer') }}" method="POST">
+                @csrf
 
-                <a href="{{ route('admin.newUser') }}" class="home-menu-item">
-                    <i class="bi bi-person-plus"></i>
-                    <div>
-                        <div class="fw-bold">Create New User</div>
-                        <div class="small text-muted">Add a new student or staff member</div>
-                    </div>
-                </a>
+                <div class="mb-2">
+                    <label>Favorite animal</label>
+                    <input type="text" name="favorite_animal" class="form-control" placeholder="" required>
+                </div>
 
-                <a href="{{ route('admin.dashboard') }}" class="home-menu-item">
-                    <i class="bi bi-gear"></i>
-                    <div>
-                        <div class="fw-bold">Dashboard</div>
-                        <div class="small text-muted">Configure portal parameters</div>
-                    </div>
-                </a>
-            </div>
+                <div class="mb-2">
+                    <label>Favorite color</label>
+                    <input type="text" name="favorite_color" class="form-control" placeholder="example@university.edu" required>
+                </div>
 
-            <div class="text-center">
-                <a href="{{ route('logout') }}" class="btn-logout d-inline-block"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="bi bi-box-arrow-left"></i> Logout System
-                </a>
+                <div class="mb-2">
+                    <label>Child birth year</label>
+                    <input type="text" name="child_birth_year" class="form-control" placeholder="" required>
+                </div>
 
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </div>
+                <button type="submit" class="btn btn-primary w-100 btn-create">Submit</button>
+            </form>
         </div>
     </div>
 </div>

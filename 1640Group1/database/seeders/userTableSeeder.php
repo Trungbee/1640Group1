@@ -15,8 +15,11 @@ class userTableSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            ['email' => 'admin@gmail.com', 'password' => Hash::make('admin'), 'role' => 'admin', 'acceptTerms' => true],
-            ['email' => 'staff1@gmail.com', 'password' => Hash::make('staff'), 'role' => 'staff', 'acceptTerms' => true]
+            ['name' => 'admin', 'email' => 'admin@gmail.com', 'password' => Hash::make('admin'), 'role' => 'admin', 'acceptTerms' => true],
+            ['name' => 'staff', 'email' => 'staff1@gmail.com', 'password' => Hash::make('staff'), 'role' => 'staff', 'acceptTerms' => true],
+        ]);
+        DB::table('users')->insert([
+            ['name' => 'staff2', 'email' => 'staff2@gmail.com', 'password' => Hash::make('staff2'), 'role' => 'staff', 'acceptTerms' => true, 'favorite_animal' => 'dog', 'favorite_color' => 'white', 'child_birth_year' => '2000']
         ]);
     }
 }
