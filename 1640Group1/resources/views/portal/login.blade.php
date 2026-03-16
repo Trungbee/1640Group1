@@ -117,8 +117,8 @@
 
             <div class="text-center">
                 <img src="https://tse4.mm.bing.net/th/id/OIP.Vz3Ijf4o6TBKRvx2gZiqDwHaB2?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Logo" class="university-logo">
-                <h4 class="fw-bold mb-1">UNIVERSITY NAME</h4>
-                <p class="text-primary small fw-bold mb-4">STUDENT PANEL</p>
+                <h4 class="fw-bold mb-1">UNIVERSITY PORTAL</h4>
+                <p class="text-primary small fw-bold mb-4">LOGIN PANEL</p>
             </div>
 
             @if (session('success'))
@@ -144,8 +144,8 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="mb-4">
-                    <label class="text-muted small">Enrollment number</label>
-                    <input type="text" name="email" class="form-control" placeholder="Enter Enrollment number" required>
+                    <label class="text-muted small">Email</label>
+                    <input type="text" name="email" class="form-control" placeholder="" required>
                 </div>
 
                 <div class="mb-3 position-relative">
@@ -154,20 +154,11 @@
                 </div>
 
                 <div class="footer-links">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                        <label class="form-check-label text-muted" for="remember">Remember me</label>
-                    </div>
                     <a href="{{ route('forgotPassword') }}" class="text-decoration-none text-muted">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-signin">Sign in</button>
             </form>
-
-            <div class="text-center mt-3">
-                <span class="text-muted small">Don't have an account? </span>
-                <a href="/sign-up" class="text-decoration-none small fw-bold" style="color: #2b99d6;">Sign up here</a>
-            </div>
 
         </div>
     </div>

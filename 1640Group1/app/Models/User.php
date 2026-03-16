@@ -18,14 +18,13 @@ class User extends Authenticatable implements MustVerifyEmail
      * Các thuộc tính có thể lưu hàng loạt (Mass Assignable).
      */
     protected $fillable = [
-        'username',
-        'fullName',
-        'phone',
+        // 'username',
+        'name',
         'email',
-        'passwordHash',
+        'password',
         'role',
         'acceptTerms',
-        'isActive',
+        // 'isActive',
         // Bổ sung các cột bảo mật để lưu từ authSetup
         'favorite_animal',
         'favorite_color',

@@ -24,7 +24,7 @@ Route::middleware('guest')->group(function () {
 });
 
 
-Route::middleware('auth')->group(function () {
+
 
     // --- ADMIN ROUTES ---
     Route::prefix('admin')->group(function () {
@@ -61,4 +61,4 @@ Route::middleware('auth')->group(function () {
 
     // --- LOGOUT ---
     Route::post('/logout', [PortalController::class, 'logout'])->name('logout');
-});
+

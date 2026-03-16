@@ -15,6 +15,10 @@ class StaffController extends Controller
     }
 
     public function authSetup(){
+        $user = User::find(session('loginId'));
+        if(!$user->favorite_animal==null){
+            return redirect('/staff/home');
+        }
         return view('staff.authSetup');
     }
 
@@ -22,7 +26,8 @@ class StaffController extends Controller
         $request->validate([
             'favorite_animal' => ['required'],
             'favorite_color' => ['required'],
-            'child_birth_year' => ['required']
+            'child_birth_year' => ['required'],
+            'term' => ['required']
         ]);
 
         $user = Auth::user();
@@ -43,7 +48,7 @@ class StaffController extends Controller
 
     public function storeIdea(Request $request)
     {
-        // 1. Kiểm tra dữ liệu đầu vào (Đã đổi 'file' thành 'document')
+          // 1. Kiểm tra dữ liệu đầu vào (Đã đổi 'file' thành 'document')
         $request->validate([
             'title' => 'required',
             'description' => 'required',

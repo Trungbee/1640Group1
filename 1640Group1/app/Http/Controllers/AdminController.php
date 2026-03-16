@@ -20,14 +20,14 @@ class AdminController
             'name' => ['required'],
             'email' => ['required','email','unique:users'],
             'password' => ['required','min:5','max:20'],
-            'role' => ['required','in:staff,admin']
+            'role' => ['required','in:Staff,admin']
         ]);
         User::create([
             'name'     => $request->name,
             'email'        => $request->email,
             'password' => Hash::make($request->password),
             'role'         => $request->role,
-            'acceptTerms' => true
+            'acceptTerms' => false
         ]);
         return view('admin.home');
     }
@@ -43,8 +43,8 @@ class AdminController
 
         // 2. Đếm số lượng Idea theo từng Staff
         $ideasByStaff = \App\Models\Idea::join('users', 'ideas.userId', '=', 'users.userId')
-            ->select('users.username', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
-            ->groupBy('users.userId', 'users.username')
+            ->select('users.name', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('users.userId', 'users.name')
             ->get();
 
         // 3. Truyền 2 biến dữ liệu này sang file giao diện

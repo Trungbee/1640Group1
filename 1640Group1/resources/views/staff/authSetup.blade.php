@@ -102,7 +102,7 @@
                 <p class="text-muted">Questions to retrieve your password</p>
             </div>
 
-            <form action="{{ route('createAuthAnswer') }}" method="POST">
+            <form action="{{ route('staff.createAuthAnswer') }}" method="POST">
                 @csrf
 
                 <div class="mb-2">
@@ -118,6 +118,11 @@
                 <div class="mb-2">
                     <label>Child birth year</label>
                     <input type="text" name="child_birth_year" class="form-control" placeholder="" required>
+                </div>
+
+                <div class="mb-2">
+                    <input type="checkbox" name="term" required>
+                    <label>Accept term & service</label>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-create">Submit</button>
