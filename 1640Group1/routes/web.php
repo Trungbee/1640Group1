@@ -26,8 +26,7 @@ Route::middleware('guest')->group(function () {
 
 
 Route::middleware('auth')->group(function () {
-
-    // --- ADMIN ROUTES ---
+// --- ADMIN ROUTES ---
     Route::get('/admin/home', [AdminController::class, 'home'])->name('admin.home');
     Route::get('/admin/newUser', [AdminController::class, 'newUser'])->name('admin.newUser');
     Route::post('/admin/newUser', [AdminController::class, 'createNewUser'])->name('createNewUser');
@@ -57,4 +56,6 @@ Route::middleware('auth')->group(function () {
 
     // --- LOGOUT ---
     Route::post('/logout', [PortalController::class, 'logout'])->name('logout');
+
+
 });
