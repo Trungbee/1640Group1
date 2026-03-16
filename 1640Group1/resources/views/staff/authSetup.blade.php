@@ -102,7 +102,7 @@
                 <p class="text-muted">Questions to retrieve your password</p>
             </div>
 
-            <form action="{{ route('staff.createAuthAnswer') }}" method="POST">
+            <form action="{{ route('createAuthAnswer') }}" method="POST">
                 @csrf
 
                 <div class="mb-2">

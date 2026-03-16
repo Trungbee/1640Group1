@@ -25,7 +25,7 @@
                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 border-r border-gray-300 my-2">
                     <i class="fa-solid fa-user text-gray-500"></i>
                 </span>
-                <input type="text" name="username" placeholder="Username" 
+                <input type="text" name="username" placeholder="Username"
                     class="w-full py-3 pl-14 pr-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm" required>
             </div>
 
@@ -33,7 +33,7 @@
                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 border-r border-gray-300 my-2">
                     <i class="fa-solid fa-lock text-gray-500"></i>
                 </span>
-                <input type="password" name="password" placeholder="Password" 
+                <input type="password" name="password" placeholder="Password"
                     class="w-full py-3 pl-14 pr-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm" required>
             </div>
 
@@ -48,7 +48,7 @@
                 <a href="{{ route('password.request') }}" class="hover:underline">Forgot Password?</a>
             </div>
 
-            <button type="submit" 
+            <button type="submit"
                 class="w-full bg-white text-gray-700 font-medium py-3 rounded-lg shadow-md hover:bg-gray-100 transition duration-200 uppercase tracking-widest">
                 Login
             </button>
