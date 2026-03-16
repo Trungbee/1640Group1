@@ -25,6 +25,7 @@
             box-shadow: 2px 0 10px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
+            z-index: 1000;
         }
 
         .university-brand {
@@ -41,6 +42,7 @@
             transition: 0.3s;
             display: flex;
             align-items: center;
+            text-decoration: none;
         }
 
         .nav-link i {
@@ -88,6 +90,7 @@
             height: 45px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid #2b99d6;
         }
 
         .top-bar {
@@ -97,6 +100,19 @@
             margin-bottom: 30px;
             gap: 20px;
         }
+
+        .btn-logout-sidebar {
+            color: #dc3545;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .btn-logout-sidebar:hover {
+            background-color: #fff5f5;
+        }
     </style>
 </head>
 <body>
@@ -104,68 +120,79 @@
     <div class="sidebar">
         <div class="university-brand">
             <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-mortarboard-fill"></i> ACADEMIC</h5>
-            <small class="text-muted">Student Management</small>
+            <small class="text-muted">Staff Portal</small>
         </div>
 
         <nav class="nav flex-column flex-grow-1">
-            <a class="nav-link active" href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
-            <a class="nav-link" href="#"><i class="bi bi-book"></i> Courses</a>
-            <a class="nav-link" href="#"><i class="bi bi-calendar-event"></i> Schedule</a>
-            <a class="nav-link" href="#"><i class="bi bi-file-earmark-text"></i> Exam Result</a>
-            <a class="nav-link" href="#"><i class="bi bi-person"></i> Profile</a>
+            <a class="nav-link active" href="{{ route('staff.home') }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="nav-link" href="#"><i class="bi bi-book"></i> My Submissions</a>
+            <a class="nav-link" href="{{ route('staff.authSetup') }}"><i class="bi bi-shield-lock"></i> Security Setup</a>
+            <a class="nav-link" href="#"><i class="bi bi-person"></i> My Profile</a>
         </nav>
 
-        <div class="mt-auto">
-            <a href="{{ route('logout') }}" class="btn-logout d-inline-block"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="bi bi-box-arrow-left"></i> Logout System
-                </a>
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
+        <div class="mt-auto border-top pt-3">
+            <a href="#" class="btn-logout-sidebar" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="bi bi-box-arrow-left me-2"></i> Logout
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </div>
     </div>
 
     <div class="main-content">
         <div class="top-bar">
             <div class="text-end me-2">
-                <p class="mb-0 fw-bold small">John Doe</p>
-                <small class="text-muted">Student ID: 2024001</small>
+                <p class="mb-0 fw-bold small">{{ Auth::user()->username ?? 'Staff User' }}</p>
+                <small class="text-muted">Role: {{ Auth::user()->role ?? 'Staff' }}</small>
             </div>
-            <img src="https://i.pravatar.cc/150?u=john" alt="Profile" class="profile-img">
+            <img src="https://ui-avatars.com/api/?name={{ Auth::user()->username ?? 'S' }}&background=2b99d6&color=fff" alt="Profile" class="profile-img">
         </div>
 
         <div class="header-welcome">
-            <h2 class="fw-bold">Welcome back, John! 👋</h2>
-            <p class="mb-0 opacity-75">You have 2 classes today and 1 upcoming assignment.</p>
+            <h2 class="fw-bold">Welcome back, {{ Auth::user()->username ?? 'Staff' }}! 👋</h2>
+            <p class="mb-0 opacity-75">Ready to share your brilliant ideas with the community?</p>
         </div>
+
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show fw-bold shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show fw-bold shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="text-muted small fw-bold text-uppercase">GPA Score</div>
-                    <h3 class="fw-bold mt-2">3.85 / 4.0</h3>
+                    <div class="text-muted small fw-bold text-uppercase">Your Total Ideas</div>
+                    <h3 class="fw-bold mt-2">12</h3>
                     <div class="progress mt-3" style="height: 6px;">
-                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                        <div class="progress-bar bg-success" style="width: 100%"></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="text-muted small fw-bold text-uppercase">Attendance</div>
-                    <h3 class="fw-bold mt-2">92%</h3>
+                    <div class="text-muted small fw-bold text-uppercase">Global Engagement</div>
+                    <h3 class="fw-bold mt-2">85%</h3>
                     <div class="progress mt-3" style="height: 6px;">
-                        <div class="progress-bar bg-primary" style="width: 92%"></div>
+                        <div class="progress-bar bg-primary" style="width: 85%"></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="text-muted small fw-bold text-uppercase">Credits Earned</div>
-                    <h3 class="fw-bold mt-2">102 / 120</h3>
+                    <div class="text-muted small fw-bold text-uppercase">System Status</div>
+                    <h3 class="fw-bold mt-2 text-success">Active</h3>
                     <div class="progress mt-3" style="height: 6px;">
-                        <div class="progress-bar bg-warning" style="width: 75%"></div>
+                        <div class="progress-bar bg-warning" style="width: 100%"></div>
                     </div>
                 </div>
             </div>
@@ -173,37 +200,8 @@
 
         <div class="row mt-5">
             <div class="col-md-8">
-                <h5 class="fw-bold mb-4">Upcoming Classes</h5>
-                <div class="card border-0 shadow-sm p-3 mb-3">
-                    <div class="d-flex justify-content-between align-items: center">
-                        <div>
-                            <h6 class="fw-bold mb-1">Advanced Web Development</h6>
-                            <small class="text-muted"><i class="bi bi-clock"></i> 08:30 AM - 10:30 AM | Room 402</small>
-                        </div>
-                        <span class="badge bg-light text-primary align-self-center">In 20 mins</span>
-                    </div>
-                </div>
-                </div>
-            <div class="col-md-4">
-                <h5 class="fw-bold mb-4">University News</h5>
-                <div class="bg-white p-4 rounded-4 shadow-sm">
-                    <p class="small text-muted mb-2">March 08, 2026</p>
-                    <h6 class="fw-bold">Mid-semester break announcement</h6>
-                    <a href="#" class="btn btn-sm btn-link p-0 text-decoration-none">Read more</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-5">
-            <div class="col-12">
-                <h5 class="fw-bold mb-4">Submit New Idea</h5>
-                <div class="bg-white p-4 rounded-4 shadow-sm">
-
-                    @if (session('success'))
-                        <div class="alert alert-success fw-bold">
-                            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
-                        </div>
-                    @endif
+                <h5 class="fw-bold mb-4"><i class="bi bi-plus-circle-fill text-primary"></i> Submit New Idea</h5>
+                <div class="bg-white p-4 rounded-4 shadow-sm border">
 
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -219,28 +217,62 @@
                         @csrf
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Category</label>
-                            <select name="category_id" class="form-select" required>
-                                <option value="" disabled selected>-- Select a category --</option>
-                                <option value="1">Math</option>
-                                <option value="2">History</option>
-                                <option value="3">English</option>
+                            <label class="form-label fw-bold">Idea Title</label>
+                            <input type="text" name="title" class="form-control border-2" placeholder="Enter a brief title" value="{{ old('title') }}" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Description</label>
+                            <textarea name="description" class="form-control border-2" rows="3" placeholder="Explain your idea..." required>{{ old('description') }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Select Category</label>
+                            <select name="category_id" class="form-select border-2" required>
+                                <option value="" disabled {{ old('category_id') ? '' : 'selected' }}>-- Choose a category --</option>
+
+                                @if(isset($categories) && count($categories) > 0)
+                                    @foreach($categories as $cat)
+                                        <option value="{{ $cat->categoryId ?? $cat->id }}" {{ old('category_id') == ($cat->categoryId ?? $cat->id) ? 'selected' : '' }}>
+                                            {{ $cat->name }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="1" {{ old('category_id') == 1 ? 'selected' : '' }}>Information Technology</option>
+                                    <option value="2" {{ old('category_id') == 2 ? 'selected' : '' }}>Business</option>
+                                    <option value="3" {{ old('category_id') == 3 ? 'selected' : '' }}>Design</option>
+                                @endif
+
                             </select>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Choose your file</label>
-                            <input class="form-control" type="file" name="document" accept=".doc,.docx,.pdf" required>
-                            <div class="form-text text-muted">
-                                <i class="bi bi-info-circle"></i> Accepted formats: Word (.doc, .docx) or PDF. Max size: 10MB.
+                            <label class="form-label fw-bold">Document Attachment</label>
+                            <input class="form-control border-2" type="file" name="document" accept=".doc,.docx,.pdf" required>
+                            <div class="form-text mt-2 text-muted">
+                                <i class="bi bi-info-circle"></i> Allowed: Word, PDF. Max size: 10MB.
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary px-4 fw-bold">
-                            <i class="bi bi-cloud-arrow-up-fill me-2"></i> Submit Idea
-                        </button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary py-2 fw-bold shadow-sm">
+                                <i class="bi bi-cloud-upload me-2"></i> Upload Idea Now
+                            </button>
+                        </div>
                     </form>
+                </div>
+            </div>
 
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-4">Quick Tips</h5>
+                <div class="bg-white p-4 rounded-4 shadow-sm border mb-3">
+                    <h6 class="fw-bold text-primary"><i class="bi bi-lightbulb"></i> Effective Submission</h6>
+                    <p class="small text-muted">Make sure your file is formatted correctly and doesn't exceed 10MB to ensure smooth processing.</p>
+                </div>
+                <div class="bg-light p-4 rounded-4 border border-dashed text-center">
+                    <i class="bi bi-shield-check text-success display-6"></i>
+                    <h6 class="fw-bold mt-2">Secure Portal</h6>
+                    <p class="small text-muted mb-0">Your documents are encrypted and safely stored.</p>
                 </div>
             </div>
         </div>

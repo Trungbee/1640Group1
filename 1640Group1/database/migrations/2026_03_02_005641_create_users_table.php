@@ -13,21 +13,24 @@ return new class extends Migration
      */
 public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id('userId');
-            // $table->string('username')->unique;
-            $table->string('name');
-            $table->string('email')->unique;
-            // $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('role');
-            $table->boolean('acceptTerms');
-            $table->string('favorite_animal')->nullable();
-            $table->string('favorite_color')->nullable();
-            $table->string('child_birth_year')->nullable();
-            // $table->boolean('isActive');
-            $table->rememberToken();
-            $table->timestamps();
+    Schema::create('users', function (Blueprint $table) {
+        $table->id('userId');
+        $table->string('username')->unique();
+        $table->string('fullName');
+        $table->string('email')->unique();
+        $table->timestamp('email_verified_at')->nullable();
+        $table->string('passwordHash');
+        $table->string('role');
+        $table->boolean('acceptTerms')->default(true);
+        $table->boolean('isActive')->default(true);
+
+        // BỔ SUNG CÁC CỘT BẢO MẬT (Cho phép null để không lỗi khi tạo user mới)
+        $table->string('favorite_animal')->nullable();
+        $table->string('favorite_color')->nullable();
+        $table->string('child_birth_year')->nullable();
+
+        $table->rememberToken();
+        $table->timestamps();
         });
 
 

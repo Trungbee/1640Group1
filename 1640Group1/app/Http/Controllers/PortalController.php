@@ -2,54 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use app\Http\Controllers\Controller;
+use App\Http\Controllers\Controller; // Sửa lại chữ "app" viết hoa
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
-class PortalController
+class PortalController extends Controller
 {
     public function showLogin(){
         return view('portal.login');
     }
+
     public function login(Request $request)
     {
         $request->validate([
             'email' => ['required','email'],
             'password' => ['required','min:5','max:20']
         ]);
-        $request->session()->regenerate();
-        $user = User::where('email','=', $request->email)->first();
+
+        $user = User::where('email', $request->email)->first();
+
         if ($user) {
-            if (Hash::check($request->password, $user->password)){
-                $request->session()->put('loginId',$user->userId);
-                if($user->role=="admin"){
-                    return redirect('/admin/dashboard');
-                }else{
-                    if($user->favorite_animal==null){
-                        return redirect('/staff/authSetup');
-                    }else{
-                        return redirect('/staff/home');
-                    }
+            // Kiểm tra mật khẩu dựa trên cột passwordHash trong DB
+            if (Hash::check($request->password, $user->passwordHash)) {
+
+                // 1. Đăng nhập chính thức
+                Auth::login($user, $request->has('remember'));
+
+                // 2. Làm mới session để chống tấn công fixation và lưu ID cũ (nếu cần)
+                $request->session()->regenerate();
+                $request->session()->put('loginId', $user->userId);
+
+                // 3. Xử lý chuyển hướng dựa trên vai trò
+                $role = strtolower($user->role);
+
+                if ($role === 'admin') {
+                    return redirect()->intended(route('admin.dashboard'));
                 }
 
+                // Nếu là Staff, kiểm tra xem đã setup câu hỏi bảo mật chưa
+                if (empty($user->favorite_animal)) {
+                    return redirect()->route('staff.authSetup');
+                }
+
+                return redirect()->intended(route('staff.home'));
+
             } else {
-                return back() ->with('fail', 'Password not matches');
+                return back()->withErrors(['password' => 'Mật khẩu không chính xác.'])->withInput();
             }
         } else {
-            return back() -> with('fail', 'This email is not registered.');
+            return back()->withErrors(['email' => 'Email này chưa được đăng ký.'])->withInput();
         }
     }
 
     public function logout(Request $request)
     {
-        $request->session()->forget('loginId');
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect()->route('loginPage');
     }
 
-
+    // --- CÁC HÀM QUÊN MẬT KHẨU GIỮ NGUYÊN ---
     public function showForgotPassword(){
         return view("portal.forgotPassword");
     }
@@ -67,62 +82,41 @@ class PortalController
             return back()->with('error','Không tìm thấy email');
         }
 
-        if ($request->security_question=="favorite_animal"){
-            if(trim($request->answer)==trim($user->favorite_animal)){
-                session()->put('password_reset_user',$user->userId);
-                return redirect(route('newPassword'));
-            }
-        }else if ($request->security_question=="favorite_color"){
-            if(trim($request->answer)==trim($user->favorite_color)){
-                session()->put('password_reset_user',$user->userId);
-                return redirect(route('newPassword'));
-            }
-        }else {
-            if(trim($request->answer)==trim($user->child_birth_year)){
-                session()->put('password_reset_user',$user->userId);
-                return redirect(route('newPassword'));
-            }
+        // So sánh câu trả lời (xóa khoảng trắng thừa)
+        $userAnswer = trim($user->{$request->security_question});
+        if(trim($request->answer) === $userAnswer){
+            session()->put('password_reset_user', $user->userId);
+            return redirect(route('newPassword'));
         }
 
         return back()->with('error','Câu trả lời bảo mật không đúng');
     }
+
     public function newPassword(){
         if(!session()->has('password_reset_user')){
-            return redirect('/forgotPassword')
-            ->with('error','Phiên reset đã hết hạn');
+            return redirect()->route('forgotPassword')->with('error','Phiên reset đã hết hạn');
         }
-
-        return redirect('/portal/resetPassword');
+        return view('portal.resetPassword');
     }
 
     public function resetPassword(Request $request){
         $request->validate([
-            'newPassword'=>'required',
-            'verifyPassword'=>'required'
+            'newPassword'=>'required|min:5',
+            'verifyPassword'=>'required|same:newPassword'
         ]);
 
-        if (!$request->newPassword==$request->verifyPassword){
-            return redirect('resetPassword')
-            ->with('error','Nhập lại mật khẩu không khớp');
-        }
-
         $userId = session()->get('password_reset_user');
-
         $user = User::find($userId);
 
         if(!$user){
-            return redirect('/forgot-password')
-            ->with('error','Không tìm thấy người dùng');
+            return redirect()->route('forgotPassword')->with('error','Không tìm thấy người dùng');
         }
 
-        $user->password = Hash::make($request->newPassword);
-
+        $user->passwordHash = Hash::make($request->newPassword);
         $user->save();
 
         session()->forget('password_reset_user');
 
-        return redirect('/')
-        ->with('success','Đổi mật khẩu thành công');
+        return redirect()->route('loginPage')->with('success','Đổi mật khẩu thành công. Vui lòng đăng nhập lại.');
     }
-
 }
