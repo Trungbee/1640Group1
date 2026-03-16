@@ -27,7 +27,6 @@
             min-height: 600px;
         }
 
-        /* Sidebar trái */
         .login-sidebar {
             background-color: #f0f7ff;
             display: flex;
@@ -53,7 +52,6 @@
             height: auto;
         }
 
-        /* Section Form */
         .login-form-section {
             padding: 40px 60px;
         }
@@ -65,7 +63,7 @@
             margin-bottom: 20px;
         }
 
-        .form-control {
+        .form-control, .form-select {
             border: none;
             border-bottom: 2px solid #eee;
             border-radius: 0;
@@ -74,7 +72,7 @@
             background: transparent;
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-bottom-color: #3498db;
         }
 
@@ -108,7 +106,7 @@
 <div class="login-container">
     <div class="row g-0">
         <div class="col-md-6 login-sidebar d-none d-md-flex">
-            <a href="{{ Route('admin.home') }}" class="back-button" title="Back to Dashboard">‹</a>
+            <a href="{{ route('admin.dashboard') }}" class="back-button" title="Back to Dashboard">‹</a>
             <img src="https://cdni.iconscout.com/illustration/premium/thumb/adding-user-illustration-download-in-svg-png-gif-formats--new-registration-add-man-person-avatar-business-pack-illustrations-5063116.png" alt="Add User Illustration" class="illustration">
         </div>
 
@@ -117,43 +115,61 @@
 
             <div class="mb-4">
                 <h3 class="fw-bold mb-1">Add new account</h3>
-                <p class="text-muted small">Create a new student or staff profile in the system.</p>
+                <p class="text-muted small">Create a new profile in the system.</p>
             </div>
+
+            @if(session('success'))
+                <div class="alert alert-success py-2">{{ session('success') }}</div>
+            @endif
+            @if($errors->any())
+                <div class="alert alert-danger py-2">
+                    <ul class="mb-0 ps-3">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <form action="{{ route('createNewUser') }}" method="POST">
                 @csrf
 
-                <div class="mb-2">
-                    <label>Full name</label>
-                    <input type="text" name="name" class="form-control" placeholder="" required>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label>Username (Login ID)</label>
+                        <input type="text" name="username" class="form-control" placeholder="Ex: trungbee" value="{{ old('username') }}" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label>Full Name</label>
+                        <input type="text" name="fullName" class="form-control" placeholder="Ex: Nguyen Van Trung" value="{{ old('fullName') }}" required>
+                    </div>
                 </div>
 
                 <div class="mb-2">
                     <label>Email Address</label>
-                    <input type="email" name="email" class="form-control" placeholder="example@university.edu" required>
+                    <input type="email" name="email" class="form-control" placeholder="example@university.edu" value="{{ old('email') }}" required>
                 </div>
 
                 <div class="mb-2">
                     <label>Initial Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="" required>
+                    <input type="password" name="password" class="form-control" placeholder="Minimum 5 characters" required>
                 </div>
 
                 <div class="mb-2">
-                    <label>Choose role</label>
-                    <select name="role" class="{{ $errors->has('role') ? 'input-error' : '' }}">
+                    <label>Assign Role</label>
+                    <select name="role" class="form-select {{ $errors->has('role') ? 'is-invalid' : '' }}" required>
+                        <option value="" disabled selected>Select a role</option>
                         <option value="Staff" {{ old('role') == 'Staff' ? 'selected' : '' }}>Staff</option>
                         <option value="QACoordinator" {{ old('role') == 'QACoordinator' ? 'selected' : '' }}>QA Coordinator</option>
-                        <option value="QAManagement" {{ old('role') == 'QAManagement' ? 'selected' : '' }}>QA Management</option>
+                        <option value="QAManager" {{ old('role') == 'QAManager' ? 'selected' : '' }}>QA Manager</option>
+                        <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
                     </select>
-                    @error('role')
-                        <span class="error-message">{{ $message }}</span>
-                    @enderror
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-create">Create Account</button>
 
                 <div class="text-center mt-3">
-                    <a href="/home" class="text-decoration-none text-muted small">Cancel and go back</a>
+                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted small">Cancel and go back</a>
                 </div>
             </form>
         </div>

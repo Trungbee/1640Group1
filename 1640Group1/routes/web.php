@@ -6,7 +6,7 @@ use App\Http\Controllers\PortalController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AuthController;
 
-
+// CÁC ROUTE CÔNG KHAI (Dành cho khách chưa đăng nhập)
 Route::middleware('guest')->group(function () {
     // Trang chủ & Đăng nhập
     Route::get('/', [PortalController::class, 'showLogin'])->name('loginPage');
@@ -18,13 +18,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/newPassword', [PortalController::class, 'newPassword'])->name('newPassword');
     Route::post('/resetPassword', [PortalController::class, 'resetPassword'])->name('passwordReset');
 
-    // Đăng ký tài khoản mới
-    Route::get('/sign-up', [AuthController::class, 'showSignUpForm'])->name('registerPage');
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
 
 
-
+// CÁC ROUTE ĐƯỢC BẢO VỆ (Bắt buộc phải đăng nhập mới được vào)
+Route::middleware('auth')->group(function () {
 
     // --- ADMIN ROUTES ---
     Route::prefix('admin')->group(function () {
@@ -62,3 +60,4 @@ Route::middleware('guest')->group(function () {
     // --- LOGOUT ---
     Route::post('/logout', [PortalController::class, 'logout'])->name('logout');
 
+});
