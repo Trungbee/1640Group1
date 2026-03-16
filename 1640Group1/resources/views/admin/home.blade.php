@@ -114,13 +114,13 @@
             </div>
 
             <div class="menu-list">
-                <a href="{{ route('admin.userManagement') }}" class="home-menu-item">
+                {{-- <a href="{{ route('admin.userManagement') }}" class="home-menu-item">
                     <i class="bi bi-people"></i>
                     <div>
                         <div class="fw-bold">Manage Accounts</div>
                         <div class="small text-muted">View and edit user permissions</div>
                     </div>
-                </a>
+                </a> --}}
 
                 <a href="{{ route('admin.newUser') }}" class="home-menu-item">
                     <i class="bi bi-person-plus"></i>
@@ -130,13 +130,13 @@
                     </div>
                 </a>
 
-                <a href="{{ route('admin.ideas') }}" class="home-menu-item item-ideas">
+                {{-- <a href="{{ route('admin.ideas') }}" class="home-menu-item item-ideas">
                     <i class="bi bi-folder-check"></i>
                     <div>
                         <div class="fw-bold">Manage Submitted Ideas</div>
                         <div class="small text-muted">Download and review staff documents</div>
                     </div>
-                </a>
+                </a> --}}
 
                 <a href="{{ route('admin.dashboard') }}" class="home-menu-item">
                     <i class="bi bi-graph-up-arrow"></i>

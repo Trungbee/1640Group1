@@ -139,11 +139,15 @@
                 </div>
 
                 <div class="mb-2">
-                    <label class="form-label-custom">Choose role</label>
-                    <select name="role" class="form-control form-control-custom" style="background-color: white; border: 1px solid #ccc;">
-                        <option value="staff">Staff</option>
-                        <option value="admin">Admin</option>
+                    <label>Choose role</label>
+                    <select name="role" class="{{ $errors->has('role') ? 'input-error' : '' }}">
+                        <option value="Staff" {{ old('role') == 'Staff' ? 'selected' : '' }}>Staff</option>
+                        <option value="QACoordinator" {{ old('role') == 'QACoordinator' ? 'selected' : '' }}>QA Coordinator</option>
+                        <option value="QAManagement" {{ old('role') == 'QAManagement' ? 'selected' : '' }}>QA Management</option>
                     </select>
+                    @error('role')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-create">Create Account</button>
