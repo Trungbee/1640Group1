@@ -24,12 +24,12 @@ class PortalController
             if (Hash::check($request->password, $user->password)){
                 $request->session()->put('loginId',$user->userId);
                 if($user->role=="admin"){
-                    return view('admin.dashboard');
+                    return redirect('/admin/dashboard');
                 }else{
                     if($user->favorite_animal==null){
-                        return view('staff.authSetup');
+                        return redirect('/staff/authSetup');
                     }else{
-                        return view('staff.home');
+                        return redirect('/staff/home');
                     }
                 }
 
@@ -46,7 +46,7 @@ class PortalController
         $request->session()->forget('loginId');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('login');
+        return redirect('/');
     }
 
 
@@ -92,7 +92,7 @@ class PortalController
             ->with('error','Phiên reset đã hết hạn');
         }
 
-        return view('portal.resetPassword');
+        return redirect('/portal/resetPassword');
     }
 
     public function resetPassword(Request $request){

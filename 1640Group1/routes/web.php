@@ -24,6 +24,8 @@ Route::get('/admin/socialmedia', [AdminController::class,'socialmedia'])->name('
 Route::get('/admin/staffmanagement', [AdminController::class,'staffmanagement'])->name('admin.staffmanagement');
 
 Route::get('/staff/home',[StaffController::class,'home'])->name('staff.home');
+Route::get('/staff/authSetup',[StaffController::class,'authSetup'])->name('staff.authSetup');
+Route::post('/staff/authSetup',[StaffController::class,'authQuestionSetup'])->name('staff.createAuthAnswer');
 
 Route::post('/logout',[PortalController::class,'logout'])->name('logout');
 

@@ -11,20 +11,26 @@ class StaffController extends Controller
         return view('staff.home');
     }
     public function authSetup(){
+        $user = User::find(session('loginId'));
+        if(!$user->favorite_animal==null){
+            return redirect('/staff/home');
+        }
         return view('staff.authSetup');
     }
     public function authQuestionSetup(Request $request){
         $request->validate([
             'favorite_animal' => ['required'],
             'favorite_color' => ['required'],
-            'child_birth_year' => ['required']
+            'child_birth_year' => ['required'],
+            'term' => ['required']
         ]);
         $user = User::find(session('loginId'));
         $user->update([
             'favorite_animal' => $request->favorite_animal,
             'favorite_color' => $request->favorite_color,
-            'child_birth_year' => $request->child_birth_year
+            'child_birth_year' => $request->child_birth_year,
+            'acceptTerms' => true
         ]);
-        return view('staff.home');
+        return redirect('/staff/home');
     }
 }

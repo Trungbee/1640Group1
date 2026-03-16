@@ -133,13 +133,22 @@ margin-top:15px;
 <i class="bi bi-calendar-event"></i> Staff management
 </a>
 
+<a class="nav-link" href="{{ route('admin.home') }}">
+<i class="bi bi-calendar-event"></i> Accounts management
+</a>
+
 </nav>
 
 
 <div class="mt-auto">
-<a class="nav-link" href="/logout">
-<i class="bi bi-box-arrow-left"></i> Logout
+<a href="{{ route('logout') }}" class="btn-logout d-inline-block"
+onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+<i class="bi bi-box-arrow-left"></i> Logout System
 </a>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+@csrf
+</form>
 </div>
 
 </div>

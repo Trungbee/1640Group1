@@ -26,7 +26,7 @@ class AdminController
             'email'        => $request->email,
             'password' => Hash::make($request->password),
             'role'         => $request->role,
-            'acceptTerms' => true
+            'acceptTerms' => false
         ]);
         return view('admin.home');
     }
