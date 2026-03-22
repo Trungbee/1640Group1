@@ -17,6 +17,15 @@ Hướng dẫn chạy code sau khi pull từ github
     DB_DATABASE=1640Group1
     DB_USERNAME=postgres
     DB_PASSWORD=123456"
+- Tìm đoạn: 
+SESSION_DRIVER...
+- Thay thế bằng: 
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+CACHE_STORE=file
 
 3. Sửa file config/database.php (Nếu cần thiết)
 - Kiểm tra dòng "'default' => env('DB_CONNECTION', 'pgsql' )"
@@ -51,5 +60,6 @@ Hướng dẫn chạy code sau khi pull từ github
 - Trong 1640Group1Server, chuột phải vào database -> Create -> database -> Database = 1640Group1
 
 6. Về lại VS code
-- Trong terminal, chạy "php artisan migrate"
+- Trong terminal, chạy "php artisan migrate:fresh --seed"
+- Để máy mới cũng có thể nhận và hiển thị file upload, gõ lệnh: php artisan storage:link ( chỉ cần 1 lần đầu tiên )
 - chạy "php artisan serve" Để chạy code
