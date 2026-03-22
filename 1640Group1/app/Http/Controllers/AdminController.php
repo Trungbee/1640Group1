@@ -70,9 +70,37 @@ class AdminController extends Controller
         return view('admin.staffmanagement');
     }
 
+    // --- 1. ĐÃ CẬP NHẬT: Tích hợp đếm lượt Vote ---
     public function ideaList()
     {
-        $ideas = Idea::with(['user', 'category'])->orderBy('created_at', 'desc')->get();
+        // Lấy danh sách bài đăng, kèm theo User, Category và ĐẾM SỐ LƯỢNG LIKE/DISLIKE
+        $ideas = Idea::with(['user', 'category'])
+            ->withCount([
+                'reactions as upvotes' => function ($query) { $query->where('is_upvote', true); },
+                'reactions as downvotes' => function ($query) { $query->where('is_upvote', false); }
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('admin.ideaList', compact('ideas'));
+    }
+
+    // --- 2. ĐÃ BỔ SUNG: Hàm xử lý xóa bài viết ---
+    public function deleteIdea($id)
+    {
+        $idea = Idea::findOrFail($id);
+
+        // Xóa file vật lý đã lưu trong thư mục storage để giải phóng ổ cứng
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($idea->filePath)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($idea->filePath);
+        }
+
+        // Xóa tất cả lượt Vote (Reactions) liên quan đến bài viết này
+        \App\Models\Reaction::where('ideaId', $id)->delete();
+
+        // Xóa bài viết
+        $idea->delete();
+
+        return redirect()->back()->with('success', 'Idea and related files have been deleted successfully.');
     }
 }
