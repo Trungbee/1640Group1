@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller; // Sửa lại chữ "app" viết hoa
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -24,24 +24,24 @@ class PortalController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if ($user) {
-            // Kiểm tra mật khẩu dựa trên cột passwordHash trong DB
+            // Check Password
             if (Hash::check($request->password, $user->passwordHash)) {
 
-                // 1. Đăng nhập chính thức
+                // Login
                 Auth::login($user, $request->has('remember'));
 
-                // 2. Làm mới session để chống tấn công fixation và lưu ID cũ (nếu cần)
+                // Refresh session
                 $request->session()->regenerate();
                 $request->session()->put('loginId', $user->userId);
 
-                // 3. Xử lý chuyển hướng dựa trên vai trò
+                // Role-based redirection handling
                 $role = strtolower($user->role);
 
                 if ($role === 'admin') {
                     return redirect()->intended(route('admin.dashboard'));
                 }
 
-                // Nếu là Staff, kiểm tra xem đã setup câu hỏi bảo mật chưa
+                // Check Sercurity Question for Staff
                 if (empty($user->favorite_animal)) {
                     return redirect()->route('staff.authSetup');
                 }
@@ -71,7 +71,6 @@ class PortalController extends Controller
         return redirect()->route('loginPage');
     }
 
-    // --- CÁC HÀM QUÊN MẬT KHẨU GIỮ NGUYÊN ---
     public function showForgotPassword(){
         return view("portal.forgotPassword");
     }
@@ -89,7 +88,7 @@ class PortalController extends Controller
             return back()->with('error','Email not found');
         }
 
-        // So sánh câu trả lời (xóa khoảng trắng thừa)
+        // Compare security questions
         $userAnswer = trim($user->{$request->security_question});
         if(trim($request->answer) === $userAnswer){
             session()->put('password_reset_user', $user->userId);

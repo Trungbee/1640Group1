@@ -11,9 +11,16 @@
         </div>
     @endif
 
-    <div class="row g-4">
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <div class="row g-4 mb-5">
         <div class="col-md-8">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white pt-3 pb-2 border-bottom-0">
                     <h5 class="fw-bold text-primary mb-0"><i class="bi bi-plus-circle me-2"></i>Submit New Idea</h5>
                 </div>
@@ -69,6 +76,76 @@
                     <h6 class="fw-bold">Secure Portal</h6>
                     <p class="text-muted small mb-0">Your documents are encrypted and safely stored.</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="fw-bold mb-3"><i class="bi bi-clock-history"></i> My Submission History</h4>
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3">No.</th>
+                            <th>Idea Title</th>
+                            <th>Category</th>
+                            <th class="text-center">Status</th>
+                            <th>Submitted Date</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($myIdeas as $key => $idea)
+                        @php
+                            // CHECK DEADLINE ĐỂ KHÓA NÚT SỬA
+                            $deadline = \Carbon\Carbon::parse($idea->created_at)->endOfWeek();
+                            $isClosed = now()->greaterThan($deadline);
+                        @endphp
+                        <tr>
+                            <td class="ps-4 text-muted">{{ $key + 1 }}</td>
+                            <td class="fw-bold text-dark text-truncate" style="max-width: 250px;">{{ $idea->title }}</td>
+                            <td>
+                                <span class="badge bg-info text-dark rounded-pill">{{ $idea->category->name ?? 'N/A' }}</span>
+                            </td>
+
+                            <td class="text-center">
+                                @if($isClosed)
+                                    <span class="badge bg-danger rounded-pill"><i class="bi bi-lock-fill"></i> Closed</span>
+                                @else
+                                    <span class="badge bg-success rounded-pill"><i class="bi bi-unlock-fill"></i> Open</span>
+                                @endif
+                            </td>
+
+                            <td class="small text-muted">{{ $idea->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('staff.downloadIdea', $idea->ideaId) }}" class="btn btn-sm btn-outline-primary" title="Download File">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+
+                                    @if($isClosed)
+                                        <button class="btn btn-sm btn-outline-secondary" title="Đã khóa chỉnh sửa" disabled>
+                                            <i class="bi bi-lock-fill"></i>
+                                        </button>
+                                    @else
+                                        <a href="{{ route('staff.editIdea', $idea->ideaId) }}" class="btn btn-sm btn-outline-warning" title="Edit Idea">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-folder-x display-4 d-block mb-3 opacity-50"></i>
+                                You haven't submitted any ideas yet.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

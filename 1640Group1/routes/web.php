@@ -42,9 +42,8 @@ Route::middleware('auth')->group(function () {
         // Ideas & Media
         Route::get('/ideas', [AdminController::class, 'ideaList'])->name('admin.ideas');
 
-        // --- ĐÃ THÊM ROUTE NÀY CHO CHỨC NĂNG XÓA BÀI ĐĂNG ---
+        // Xóa bài đăng
         Route::delete('/ideas/{id}', [AdminController::class, 'deleteIdea'])->name('admin.deleteIdea');
-        // ----------------------------------------------------
 
         Route::get('/socialmedia', [AdminController::class, 'socialmedia'])->name('admin.socialmedia');
 
@@ -60,10 +59,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('staff')->group(function () {
         Route::get('/home', [StaffController::class, 'home'])->name('staff.home');
 
-        // 1. Route cho trang My Submissions
+        // Route cho trang My Submissions
         Route::get('/my-submissions', [StaffController::class, 'mySubmissions'])->name('staff.mySubmissions');
-
         Route::post('/submit-idea', [StaffController::class, 'storeIdea'])->name('idea.store');
+
+        // --- ĐÃ THÊM 2 ROUTE NÀY CHO TÍNH NĂNG CHỈNH SỬA BÀI VIẾT (CRUD) ---
+        // Route hiển thị trang chỉnh sửa một bài viết cụ thể
+        Route::get('/my-submissions/edit/{id}', [StaffController::class, 'editIdea'])->name('staff.editIdea');
+        // Route xử lý cập nhật dữ liệu sau khi sửa
+        Route::put('/my-submissions/update/{id}', [StaffController::class, 'updateIdea'])->name('staff.updateIdea');
+        // ------------------------------------------------------------------
 
         // Trang Social Media của Staff
         Route::get('/social-media', [StaffController::class, 'socialMedia'])->name('staff.socialMedia');
@@ -79,7 +84,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/authSetup', [StaffController::class, 'authQuestionSetup'])->name('createAuthAnswer');
     });
 
-        // --- COORDINATOR ROUTES ---
+    // --- COORDINATOR ROUTES ---
     Route::prefix('qa_coordinator')->group(function () {
         Route::get('/home', [QACoordinatorController::class, 'home'])->name('qa_coordinator.home');
 

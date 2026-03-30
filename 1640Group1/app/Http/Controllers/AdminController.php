@@ -19,16 +19,16 @@ class AdminController extends Controller
     }
 
     public function createNewUser(Request $request){
-        // 1. Kiểm tra đầu vào (Đã thêm fullName và set username là duy nhất)
+        // Check input data
         $request->validate([
             'username' => ['required', 'unique:users,username'],
-            'fullName' => ['required'], // Bắt buộc phải nhập Họ và Tên
+            'fullName' => ['required'],
             'email'    => ['required','email','unique:users,email'],
             'password' => ['required','min:5','max:20'],
             'role'     => ['required','in:Staff,Admin,QACoordinator,QAManager']
         ]);
 
-        // 2. Lưu vào Database (Bổ sung thêm fullName)
+        // Save to Database
         User::create([
             'username'    => $request->username,
             'fullName'    => $request->fullName, // Thêm dòng này
@@ -38,7 +38,7 @@ class AdminController extends Controller
             'acceptTerms' => false
         ]);
 
-        // 3. Chuyển hướng kèm thông báo thành công
+        // Redirection with a success message.
         return redirect()->back()->with('success', 'New account created successfully!');
     }
 
@@ -102,10 +102,10 @@ class AdminController extends Controller
         return redirect('/staffManagement');
     }
 
-    // --- 1. ĐÃ CẬP NHẬT: Tích hợp đếm lượt Vote ---
+    // Count Vote
     public function ideaList()
     {
-        // Lấy danh sách bài đăng, kèm theo User, Category và ĐẾM SỐ LƯỢNG LIKE/DISLIKE
+        // Get a list of posts, including User, Category, and COUNT the number of LIKES/DISLIKES.
         $ideas = Idea::with(['user', 'category'])
             ->withCount([
                 'reactions as upvotes' => function ($query) { $query->where('is_upvote', true); },
@@ -117,20 +117,20 @@ class AdminController extends Controller
         return view('admin.ideaList', compact('ideas'));
     }
 
-    // --- 2. ĐÃ BỔ SUNG: Hàm xử lý xóa bài viết ---
+    // Function to handle post deletion
     public function deleteIdea($id)
     {
         $idea = Idea::findOrFail($id);
 
-        // Xóa file vật lý đã lưu trong thư mục storage để giải phóng ổ cứng
+        // Delete physical files saved in the storage folder to free up hard drive space.
         if (\Illuminate\Support\Facades\Storage::disk('public')->exists($idea->filePath)) {
             \Illuminate\Support\Facades\Storage::disk('public')->delete($idea->filePath);
         }
 
-        // Xóa tất cả lượt Vote (Reactions) liên quan đến bài viết này
+        // Remove all votes (reactions) related to this post.
         \App\Models\Reaction::where('ideaId', $id)->delete();
 
-        // Xóa bài viết
+        // Delete Post
         $idea->delete();
 
         return redirect()->back()->with('success', 'Idea and related files have been deleted successfully.');

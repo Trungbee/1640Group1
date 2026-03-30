@@ -4,7 +4,7 @@
 <div class="container-fluid">
 
     <div class="bg-primary text-white p-4 rounded-3 mb-4 shadow-sm" style="background: linear-gradient(45deg, #2b99d6, #5ab7e6) !important;">
-        <h3 class="fw-bold">Welcome back, {{ Auth::user()->username ?? 'Staff' }}! 👋</h3>
+        <h3 class="fw-bold">Welcome back, {{ Auth::user()->fullName ?? Auth::user()->username ?? 'Staff' }}! 👋</h3>
         <p class="mb-0">Ready to share your brilliant ideas with the community?</p>
     </div>
 
@@ -12,10 +12,10 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-2">YOUR TOTAL IDEAS</h6>
-                    <h2 class="fw-bold text-dark mb-3">12</h2>
+                    <h6 class="text-muted fw-bold mb-2"><i class="bi bi-lightbulb text-warning me-1"></i> YOUR TOTAL IDEAS</h6>
+                    <h2 class="fw-bold text-dark mb-3">{{ $totalIdeas }}</h2>
                     <div class="progress" style="height: 6px;">
-                        <div class="progress-bar bg-success" style="width: 100%"></div>
+                        <div class="progress-bar bg-success" style="width: {{ min(100, $totalIdeas * 10) }}%"></div>
                     </div>
                 </div>
             </div>
@@ -24,10 +24,10 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-2">GLOBAL ENGAGEMENT</h6>
-                    <h2 class="fw-bold text-dark mb-3">85%</h2>
+                    <h6 class="text-muted fw-bold mb-2"><i class="bi bi-activity text-primary me-1"></i> GLOBAL ENGAGEMENT</h6>
+                    <h2 class="fw-bold text-dark mb-3">{{ $engagementPercentage }}%</h2>
                     <div class="progress" style="height: 6px;">
-                        <div class="progress-bar bg-primary" style="width: 85%"></div>
+                        <div class="progress-bar bg-primary" style="width: {{ $engagementPercentage }}%"></div>
                     </div>
                 </div>
             </div>
@@ -36,10 +36,10 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-2">SYSTEM STATUS</h6>
-                    <h2 class="fw-bold text-success mb-3">Active</h2>
+                    <h6 class="text-muted fw-bold mb-2"><i class="bi bi-hand-thumbs-up text-danger me-1"></i> YOUR TOTAL VOTES</h6>
+                    <h2 class="fw-bold text-success mb-3">{{ $totalMyVotes }}</h2>
                     <div class="progress" style="height: 6px;">
-                        <div class="progress-bar bg-warning" style="width: 100%"></div>
+                        <div class="progress-bar bg-warning" style="width: {{ min(100, $totalMyVotes * 5) }}%"></div>
                     </div>
                 </div>
             </div>
