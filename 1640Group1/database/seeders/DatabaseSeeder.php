@@ -6,15 +6,16 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Bơm dữ liệu theo thứ tự: Môn học trước, User sau
+        // Phải gọi theo đúng thứ tự: Tạo Tài khoản và Chuyên mục trước
         $this->call([
-            CategorySeeder::class,
             UserSeeder::class,
+            CategorySeeder::class,
+
+            // Đã xóa dấu // ở 2 dòng dưới để hệ thống kích hoạt việc tạo bài viết
+            IdeaSeeder::class,
+            ReactionSeeder::class,
         ]);
     }
 }
