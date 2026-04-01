@@ -51,7 +51,12 @@
                             <label class="form-label fw-bold small">Document Attachment</label>
                             <input type="file" name="document" class="form-control" accept=".pdf,.doc,.docx" required>
                         </div>
-
+                        <div class="form-check mb-3 text-start">
+                            <input class="form-check-input" type="checkbox" name="is_anonymous" id="is_anonymous" value="1">
+                            <label class="form-check-label text-muted select-none" for="is_anonymous">
+                            <i class="bi bi-incognito me-1"></i> Post anonymously (Hide my identity from other staff)
+                             </label>
+                        </div>
                         <button type="submit" class="btn btn-primary px-4 py-2 w-100 fw-bold">
                             <i class="bi bi-cloud-upload"></i> Upload Idea Now
                         </button>
@@ -98,7 +103,7 @@
                     <tbody>
                         @forelse($myIdeas as $key => $idea)
                         @php
-                            // CHECK DEADLINE ĐỂ KHÓA NÚT SỬA
+                            // CHECK DEADLINE TO LOCK EDIT BUTTON
                             $deadline = \Carbon\Carbon::parse($idea->created_at)->endOfWeek();
                             $isClosed = now()->greaterThan($deadline);
                         @endphp
@@ -125,7 +130,7 @@
                                     </a>
 
                                     @if($isClosed)
-                                        <button class="btn btn-sm btn-outline-secondary" title="Đã khóa chỉnh sửa" disabled>
+                                        <button class="btn btn-sm btn-outline-secondary" title="Editing is locked!" disabled>
                                             <i class="bi bi-lock-fill"></i>
                                         </button>
                                     @else

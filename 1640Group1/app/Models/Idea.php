@@ -34,4 +34,8 @@ class Idea extends Model
     {
         return $this->hasMany(Reaction::class, 'ideaId', 'ideaId');
     }
+    public function comments() {
+        // Lấy danh sách comment, cái nào mới nhất xếp xuống dưới cùng
+        return $this->hasMany(Comment::class, 'ideaId')->orderBy('created_at', 'asc');
+    }
 }

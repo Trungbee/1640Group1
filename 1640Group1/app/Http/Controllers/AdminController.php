@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use ZipArchive;
 
 class AdminController extends Controller
 {
@@ -89,7 +90,7 @@ class AdminController extends Controller
             ->groupBy('categories.categoryId', 'categories.name')
             ->get();
 
-        // Tổng hợp con số cho thẻ Summary
+        // Compile the numbers for the Summary tag.
         $totalUsers = User::count();
         $totalIdeas = Idea::count();
 
@@ -182,4 +183,36 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Idea and related files have been deleted successfully.');
     }
+        public function downloadIdea($id)
+    {
+        // Find idea or throw 404 error
+        $idea = Idea::findOrFail($id);
+
+        // Define the path to the original file uploaded by the user (if it exists)
+        $filePath = storage_path('app/public/' . $idea->filePath);
+
+        // Create a ZIP file name based on the idea's ID and title for better identification
+        $zipFileName = 'Admin_Idea_Doc_' . $idea->ideaId . '.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName);
+
+        $zip = new ZipArchive;
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+
+            // Check if the original file exists and is not a directory before adding it to the ZIP
+            if (file_exists($filePath) && !is_dir($filePath)) {
+                $zip->addFile($filePath, basename($filePath));
+            } else {
+                // If it'sSeeder data without the actual file, create a notification file inside the ZIP
+                $zip->addFromString('system_notice.txt', "Tai lieu goc khong ton tai do day la du lieu mau (Seeder).");
+            }
+
+            $zip->close();
+        } else {
+            return back()->with('error', 'Could not create ZIP file');
+        }
+
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
 }
+
