@@ -111,7 +111,7 @@ class AdminController extends Controller
     public function staffmanagement()
     {
         $users = User::all();
-        return view('admin.staffManagement', compact('users'));
+        return view('admin.staffmanagement', compact('users'));
     }
 
     public function deleteUser($userId){
