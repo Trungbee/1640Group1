@@ -27,19 +27,22 @@ Route::middleware('auth')->group(function () {
 
     // --- ADMIN ROUTES ---
     Route::prefix('admin')->group(function () {
-        Route::get('/home', [AdminController::class, 'home'])->name('admin.home');
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
         // Quản lý người dùng
         Route::get('/newUser', [AdminController::class, 'newUser'])->name('admin.newUser');
         Route::post('/newUser', [AdminController::class, 'createNewUser'])->name('createNewUser');
-        Route::get('/userManagement', [AdminController::class, 'userManagement'])->name('admin.userManagement');
         Route::get('/staffManagement', [AdminController::class, 'staffmanagement'])->name('admin.staffManagement');
         Route::get('/updateUser/{userId}', [AdminController::class, 'viewUpdateUser'])->name('admin.updateUser');
         Route::post('/updateUser/{userId}', [AdminController::class, 'updateUser'])->name('updateUser');
         Route::get('/deleteUser/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 
-        // Ideas & Media
+        // Category, Ideas & Media
+        Route::get('/categoryManagement', [AdminController::class, 'categoryManagement'])->name('admin.categoryManagement');
+        Route::get('/newCategory', [AdminController::class, 'newCategory'])->name('admin.newCategory');
+        Route::post('/newCategory', [AdminController::class, 'createNewCategory'])->name('createNewCategory');
+        Route::get('/deleteCategory/{categoryId}', [AdminController::class, 'deleteCategory'])->name('admin.deleteCategory');
+
         Route::get('/ideas', [AdminController::class, 'ideaList'])->name('admin.ideas');
 
         // Xóa bài đăng
@@ -89,11 +92,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/home', [QACoordinatorController::class, 'home'])->name('qa_coordinator.home');
 
         // Quản lý category
-        Route::get('/newCategory', [AdminController::class, 'newCategory'])->name('qa_coordinator.newCategory');
-        Route::post('/newCategory', [AdminController::class, 'createNewCategory'])->name('createNewCategory');
+        Route::get('/newCategory', [QACoordinatorController::class, 'newCategory'])->name('qa_coordinator.newCategory');
+        Route::post('/newCategory', [QACoordinatorController::class, 'createNewCategory'])->name('createNewCategory');
         Route::get('/categoryManagement', [QACoordinatorController::class, 'categoryManagement'])->name('qa_coordinator.categoryManagement');
-        Route::get('/updateCategory/{categoryId}', [QACoordinatorController::class, 'viewUpdateCategory'])->name('qa_coordinator.updateCategory');
-        Route::post('/updateCategory/{categoryId}', [QACoordinatorController::class, 'updateCategory'])->name('updateCategory');
         Route::get('/deleteCategory/{categoryId}', [QACoordinatorController::class, 'deleteCategory'])->name('qa_coordinator.deleteCategory');
 
         // Quản lý idea
@@ -109,13 +110,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/home', [QAManagerController::class, 'home'])->name('qa_manager.home');
 
         // Quản lý người dùng
-        Route::get('/newUser', [AdminController::class, 'newUser'])->name('admin.newUser');
-        Route::post('/newUser', [AdminController::class, 'createNewUser'])->name('createNewUser');
-        Route::get('/userManagement', [AdminController::class, 'userManagement'])->name('admin.userManagement');
-        Route::get('/staffManagement', [AdminController::class, 'staffmanagement'])->name('admin.staffManagement');
-        Route::get('/updateUser/{userId}', [AdminController::class, 'viewUpdateUser'])->name('admin.updateUser');
-        Route::post('/updateUser/{userId}', [AdminController::class, 'updateUser'])->name('updateUser');
-        Route::get('/deleteUser/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+        Route::get('/newUser', [QAManagerController::class, 'newUser'])->name('qa_manager.newUser');
+        Route::post('/newUser', [QAManagerController::class, 'createNewUser'])->name('createNewUser');
+        Route::get('/staffManagement', [QAManagerController::class, 'staffManagement'])->name('qa_manager.staffManagement');
+        Route::get('/updateUser/{userId}', [QAManagerController::class, 'viewUpdateUser'])->name('qa_manager.updateUser');
+        Route::post('/updateUser/{userId}', [QAManagerController::class, 'updateUser'])->name('qa_manager.updateUser');
+        Route::get('/deleteUser/{userId}', [QAManagerController::class, 'deleteUser'])->name('qa_manager.deleteUser');
 
         // Thiết lập câu hỏi bảo mật
         Route::get('/authSetup', [StaffController::class, 'authSetup'])->name('staff.authSetup');

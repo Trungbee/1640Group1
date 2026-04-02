@@ -17,10 +17,31 @@ class QACoordinatorController extends Controller
         return view('qa_coordinator.categoryManagement', compact('categories'));
     }
 
+    public function newCategory(){
+        return view('qa_coordinator.newCategory');
+    }
+
+    public function createNewCategory(Request $request){
+        // Check input data
+        $request->validate([
+            'name' => ['required', 'unique:categories,name']
+        ]);
+        // Save to Database
+        Category::create([
+            'name'    => $request->name
+        ]);
+
+        return redirect()->back()->with('success', 'New category added successfully!');
+    }
+
     public function deleteCategory($categoryId){
         $category = Category::findOrFail($categoryId);
+
+        if (Idea::where('categoryId', $categoryId)->exists()){
+            return back()->with('error', 'Cannot delete category that has ideas.');
+        }
         $category->delete();
-        return redirect()->back();
+        return back()->with('success', 'Category deleted successfully.');
     }
 
     public function viewUpdateCategory($categoryId){
@@ -48,12 +69,7 @@ class QACoordinatorController extends Controller
     public function deleteIdea($ideaId){
         $idea = Idea::findOrFail($ideaId);
         $idea->delete();
-        return redirect()->back();
-    }
-
-    public function viewUpdateIdea($ideaId){
-        $idea = Idea::findOrFail($ideaId);
-        return view('qa_coordinator.updateCategory', compact('idea'));
+        return back()->with('success', 'Idea deleted successfully.');
     }
 
 }

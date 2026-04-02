@@ -30,7 +30,7 @@
                             <td class="ps-4 text-muted">{{ $key + 1 }}</td>
 
                             <td>
-                                <span class="badge bg-info text-dark rounded-pill" style="font-size: 0.7rem;">{{ $category->name ?? 'N/A' }}</span>
+                                <div class="fw-bold text-primary mb-1 text-truncate" style="max-width: 200px;" title="{{ $category->name }}">{{ $category->name }}</div>
                             </td>
 
                                 <@php
@@ -44,10 +44,10 @@
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
 
-                                    <form action="{{ route('qa_coordinator.deleteCategory', $category->categoryId) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                    <form action="{{ route('admin.deleteCategory', $category->categoryId) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Idea">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Category">
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </form>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Idea;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -40,10 +41,6 @@ class AdminController extends Controller
 
         // Redirection with a success message.
         return redirect()->back()->with('success', 'New account created successfully!');
-    }
-
-    public function userManagement() {
-        return view("admin.userManagement");
     }
 
     // DASHBOARD
@@ -119,8 +116,22 @@ class AdminController extends Controller
 
     public function deleteUser($userId){
         $user = User::findOrFail($userId);
+        $ideas = Idea::where('userId', $userId)->get();
+        foreach ($ideas as $idea) {
+            // Delete physical files saved in the storage folder to free up hard drive space.
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($idea->filePath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($idea->filePath);
+            }
+
+            // Remove all votes (reactions) related to this post.
+            \App\Models\Reaction::where('ideaId', $idea->ideaId)->delete();
+
+            // Delete Post
+            $idea->delete();
+        }
+
         $user->delete();
-        return redirect()->back();
+        return back()->with('success', 'Account deleted successfully!');
     }
 
     public function viewUpdateUser($userId){
@@ -146,7 +157,39 @@ class AdminController extends Controller
 
         $user->save();
 
-        return redirect('/staffManagement');
+        return back()->with('success', 'Updated');
+    }
+
+    public function categoryManagement(){
+        $categories = \App\Models\Category::all();
+        return view('admin.categoryManagement', compact('categories'));
+    }
+
+    public function newCategory(){
+        return view('admin.newCategory');
+    }
+
+    public function createNewCategory(Request $request){
+        // Check input data
+        $request->validate([
+            'name' => ['required', 'unique:categories,name']
+        ]);
+        // Save to Database
+        Category::create([
+            'name'    => $request->name
+        ]);
+
+        return redirect()->back()->with('success', 'New category added successfully!');
+    }
+
+    public function deleteCategory($categoryId){
+        $category = Category::findOrFail($categoryId);
+
+        if (Idea::where('categoryId', $categoryId)->exists()){
+            return back()->with('error', 'Cannot delete category that has ideas.');
+        }
+        $category->delete();
+        return back()->with('success', 'Category deleted successfully.');
     }
 
     // Count Vote

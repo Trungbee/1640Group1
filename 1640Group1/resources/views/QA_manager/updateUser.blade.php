@@ -48,7 +48,7 @@
         <button type="submit" class="btn btn-primary w-100 btn-create">Update Account</button>
 
         <div class="text-center mt-3">
-            <a href="{{ route('admin.staffManagement') }}" class="text-decoration-none text-muted small">Cancel and go back</a>
+            <a href="{{ route('qa_manager.staffManagement') }}" class="text-decoration-none text-muted small">Cancel and go back</a>
         </div>
 
 </div>

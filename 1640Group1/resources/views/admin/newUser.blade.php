@@ -107,7 +107,7 @@
     <div class="row g-0">
         <div class="col-md-6 login-sidebar d-none d-md-flex">
             <a href="{{ route('admin.dashboard') }}" class="back-button" title="Back to Dashboard">‹</a>
-            <img src="https://cdni.iconscout.com/illustration/premium/thumb/adding-user-illustration-download-in-svg-png-gif-formats--new-registration-add-man-person-avatar-business-pack-illustrations-5063116.png" alt="Add User Illustration" class="illustration">
+            <img src="https://tse4.mm.bing.net/th/id/OIP.Vz3Ijf4o6TBKRvx2gZiqDwHaB2?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Illustration" class="illustration">
         </div>
 
         <div class="col-md-6 login-form-section">

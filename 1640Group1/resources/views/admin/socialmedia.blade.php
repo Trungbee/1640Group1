@@ -4,7 +4,7 @@
 
 <div class="container-fluid">
 
-    <h2 class="text-center fw-bold mb-4">Social Media Management</h2>
+    <h2 class="text-center fw-bold mb-4">Topic Management</h2>
 
     <div class="card shadow-sm border-0">
         <div class="card-body">

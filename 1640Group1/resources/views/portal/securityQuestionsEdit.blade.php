@@ -102,9 +102,19 @@
     <div class="row g-0">
         <div class="col-md-6 login-sidebar d-none d-md-flex">
             @php
-                $cancelUrl = $isFirstSetup
-                    ? (Auth::user()->role === 'Admin' ? route('admin.home') : route('staff.home'))
-                    : route('securityQuestions');
+                if ($isFirstSetup) {
+                    $role = Auth::user()->role;
+
+                    $cancelUrl = match($role) {
+                        'Admin'         => route('admin.dashboard'),
+                        'Staff'         => route('staff.home'),
+                        'QACoordinator' => route('qa_coordinator.home'),
+                        'QAManager'     => route('qa_manager.home'),
+                        default         => route('login'), // Fallback if role is unknown
+                    };
+                } else {
+                    $cancelUrl = route('securityQuestions');
+                }
             @endphp
             <a href="{{ $cancelUrl }}" class="back-button" title="Back">‹</a>
             <img src="https://cdni.iconscout.com/illustration/premium/thumb/forgot-password-4268397-3551717.png" alt="Edit Security Questions" class="illustration">

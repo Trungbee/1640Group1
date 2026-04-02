@@ -47,7 +47,7 @@
 
                             {{-- Delete Button --}}
                             <a href="{{ route('admin.deleteUser',$user->userId) }}" class="btn btn-danger"
-                            onclick="return confirm('Are you sure to delete this account ?');">
+                            onclick="return confirm('Delete this account will delete all associated ideas and votes. Continue?');">
                             Delete Account
                             </a>
                             @endif

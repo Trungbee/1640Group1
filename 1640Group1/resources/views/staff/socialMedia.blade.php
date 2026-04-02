@@ -13,7 +13,7 @@
 }
 </style>
 <div class="container-fluid">
-    <h3 class="fw-bold mb-4"><i class="bi bi-globe2"></i> Social Media List</h3>
+    <h3 class="fw-bold mb-4"><i class="bi bi-globe2"></i> Topic List</h3>
 
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
