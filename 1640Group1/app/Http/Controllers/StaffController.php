@@ -5,38 +5,35 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Idea;
-use App\Models\Comment;
-use App\Models\Reaction;
-use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class StaffController extends Controller
 {
     public function home() {
-        $userId = Auth::id();
+        $userId = \Illuminate\Support\Facades\Auth::id();
 
-        // 1. Display total ideas from staff
-        $totalIdeas = Idea::where('userId', $userId)->count();
+        // Display total ideals from staff
+        $totalIdeas = \App\Models\Idea::where('userId', $userId)->count();
 
         // 2. Display total Vote from staff
-        $totalMyVotes = Reaction::where('userId', $userId)->count();
+        $totalMyVotes = \App\Models\Reaction::where('userId', $userId)->count();
 
         // 3. GLOBAL ENGAGEMENT: % Interaction
-        $totalSystemIdeas = Idea::count();
+        $totalSystemIdeas = \App\Models\Idea::count(); // Total number of articles across the entire system
 
         $engagementPercentage = 0;
         if ($totalSystemIdeas > 0) {
+            // Calculate the percentage and use the min() function to ensure it is a maximum of 100%
             $engagementPercentage = min(100, round(($totalMyVotes / $totalSystemIdeas) * 100));
         }
 
+        // Display to the staff home screen
         return view('staff.home', compact('totalIdeas', 'totalMyVotes', 'engagementPercentage'));
     }
 
     public function mySubmissions() {
-        $categories = Category::all();
+        $categories = \App\Models\Category::all();
         $myIdeas = Idea::where('userId', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('staff.mySubmissions', compact('categories', 'myIdeas'));
     }
@@ -83,7 +80,6 @@ class StaffController extends Controller
         $idea->description = $request->description;
         $idea->categoryId = $request->category_id;
         $idea->userId = Auth::id();
-        $idea->is_anonymous = $request->has('is_anonymous');
 
         if ($request->hasFile('document')) {
             $path = $request->file('document')->store('ideas', 'public');
@@ -95,100 +91,42 @@ class StaffController extends Controller
         return redirect()->route('staff.mySubmissions')->with('success', 'Idea submitted successfully!');
     }
 
-    public function socialMedia(Request $request)
+    public function socialMedia()
     {
-        $sort = $request->query('sort', 'latest');
-
-        $query = Idea::with(['user', 'comments.user'])
+        $ideas = \App\Models\Idea::with('user')
             ->withCount([
-                'reactions as upvotes' => function ($q) { $q->where('is_upvote', true); },
-                'reactions as downvotes' => function ($q) { $q->where('is_upvote', false); }
-            ]);
+                'reactions as upvotes' => function ($query) { $query->where('is_upvote', true); },
+                'reactions as downvotes' => function ($query) { $query->where('is_upvote', false); }
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        if ($sort === 'popular') {
-            // Sắp xếp theo hiệu số Like - Dislike
-            $query->orderByRaw('(
-                (SELECT COUNT(*) FROM reactions WHERE reactions."ideaId" = ideas."ideaId" AND is_upvote = true) -
-                (SELECT COUNT(*) FROM reactions WHERE reactions."ideaId" = ideas."ideaId" AND is_upvote = false)
-            ) DESC');
-        } elseif ($sort === 'viewed') {
-            $query->orderBy('views', 'desc');
-        } elseif ($sort === 'comments') {
-            $query->addSelect(['last_comment_at' => Comment::select('created_at')
-                ->whereColumn('ideaId', 'ideas.ideaId')
-                ->latest()
-                ->take(1)
-            ]);
+        $myReactions = \App\Models\Reaction::where('userId', Auth::id())->pluck('is_upvote', 'ideaId')->toArray();
 
-            // Sort by priority - new comment -> post date
-            $query->orderByRaw('GREATEST(
-                COALESCE((SELECT MAX(created_at) FROM comments WHERE comments."ideaId" = ideas."ideaId"), ideas.created_at),
-                ideas.created_at
-            ) DESC');
-        } else {
-            // Latest Ideas
-            $query->orderBy('created_at', 'desc');
-        }
-
-        $ideas = $query->paginate(5)->withQueryString();
-        $myReactions = Reaction::where('userId', Auth::id())->pluck('is_upvote', 'ideaId')->toArray();
-
-        return view('staff.socialMedia', compact('ideas', 'myReactions', 'sort'));
-    }
-
-    public function storeComment(Request $request, $ideaId)
-    {
-        $request->validate([
-            'content' => 'required|string|max:1000'
-        ]);
-
-        Comment::create([
-            'ideaId' => $ideaId,
-            'userId' => Auth::id(),
-            'content' => (string) $request->input('content'),
-            'is_anonymous' => $request->has('is_anonymous')
-        ]);
-
-        return redirect()->back()->with('success', 'Your comment has been posted!');
+        return view('staff.socialMedia', compact('ideas', 'myReactions'));
     }
 
     public function downloadIdea($id)
     {
-        $idea = Idea::findOrFail($id);
-        $filePath = storage_path('app/public/' . $idea->filePath);
-
-        $zipFileName = 'Idea_Doc_' . $idea->ideaId . '.zip';
-        $zipFilePath = storage_path('app/public/' . $zipFileName);
-
-        $zip = new \ZipArchive;
-        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
-            if (file_exists($filePath) && !is_dir($filePath)) {
-                $zip->addFile($filePath, basename($filePath));
-            } else {
-                $zip->addFromString('readme.txt', "Placeholder for seeded data.");
-            }
-            $zip->close();
-        } else {
-            return back()->with('error', 'Failed to create ZIP file.');
-        }
-
-        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        $idea = \App\Models\Idea::findOrFail($id);
+        $path = storage_path('app/public/' . $idea->filePath);
+        return response()->download($path);
     }
 
     public function react(Request $request, $id)
     {
-        $idea = Idea::findOrFail($id);
+        $idea = \App\Models\Idea::findOrFail($id);
 
-        // Check deadline (End of the week of the idea's creation date)
         $deadline = Carbon::parse($idea->created_at)->endOfWeek();
 
         if (now()->greaterThan($deadline)) {
-            return response()->json(['message' => 'The voting period ended last Sunday!'], 403);
+            return response()->json(['message' => 'The voting period for this post ended last Sunday!'], 403);
         }
 
         $isUpvote = $request->action === 'upvote';
         $userId = Auth::id();
-        $reaction = Reaction::where('ideaId', $id)->where('userId', $userId)->first();
+
+        $reaction = \App\Models\Reaction::where('ideaId', $id)->where('userId', $userId)->first();
 
         if ($reaction) {
             if ($reaction->is_upvote == $isUpvote) {
@@ -197,43 +135,54 @@ class StaffController extends Controller
                 $reaction->update(['is_upvote' => $isUpvote]);
             }
         } else {
-            Reaction::create([
+            \App\Models\Reaction::create([
                 'ideaId' => $id,
                 'userId' => $userId,
                 'is_upvote' => $isUpvote
             ]);
         }
 
-        return response()->json([
-            'upvotes' => Reaction::where('ideaId', $id)->where('is_upvote', true)->count(),
-            'downvotes' => Reaction::where('ideaId', $id)->where('is_upvote', false)->count()
-        ]);
+        $upvotes = \App\Models\Reaction::where('ideaId', $id)->where('is_upvote', true)->count();
+        $downvotes = \App\Models\Reaction::where('ideaId', $id)->where('is_upvote', false)->count();
+
+        return response()->json(['upvotes' => $upvotes, 'downvotes' => $downvotes]);
     }
 
+    // Display CRUD Ideals (Staff) & Check Deadline
     public function editIdea($id)
     {
         $idea = Idea::findOrFail($id);
+        // Check Author, if not author, Can't be edit ideas.
         if ($idea->userId !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'You have no permission to edit other people ideas!');
         }
 
+        // Check Time if close vote, can't edit anymore.
         $deadline = Carbon::parse($idea->created_at)->endOfWeek();
         if (now()->greaterThan($deadline)) {
-            return redirect()->route('staff.mySubmissions')->with('error', 'This post is locked for editing!');
+            return redirect()->route('staff.mySubmissions')->with('error', 'This post is now closed for voting. You can no longer edit the content!');
         }
 
-        $categories = Category::all();
+        $categories = \App\Models\Category::all();
+
         return view('staff.editIdea', compact('idea', 'categories'));
     }
 
+    // Update Data after Edit/Update.
     public function updateIdea(Request $request, $id)
     {
         $idea = Idea::findOrFail($id);
 
         if ($idea->userId !== Auth::id()) {
-            abort(403);
+            abort(403, 'You have no permission to edit other people ideas!');
         }
 
+        $deadline = Carbon::parse($idea->created_at)->endOfWeek();
+        if (now()->greaterThan($deadline)) {
+            return redirect()->route('staff.mySubmissions')->with('error', 'Action rejected: Post has been locked!');
+        }
+
+        // Validate data
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
@@ -245,25 +194,18 @@ class StaffController extends Controller
         $idea->description = $request->description;
         $idea->categoryId = $request->category_id;
 
+        // Handle Upload File
         if ($request->hasFile('document')) {
-            if ($idea->filePath && Storage::disk('public')->exists($idea->filePath)) {
-                Storage::disk('public')->delete($idea->filePath);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($idea->filePath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($idea->filePath);
             }
+
             $path = $request->file('document')->store('ideas', 'public');
             $idea->filePath = $path;
         }
 
         $idea->save();
-        return redirect()->route('staff.mySubmissions')->with('success', 'Updated successfully!');
-    }
 
-    public function incrementView($ideaId)
-    {
-        $idea = Idea::find($ideaId);
-        if ($idea) {
-            $idea->increment('views');
-            return response()->json(['success' => true]);
-        }
-        return response()->json(['success' => false], 404);
+        return redirect()->route('staff.mySubmissions')->with('success', 'The idea has been updated successfully !');
     }
 }
