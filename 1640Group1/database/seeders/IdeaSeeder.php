@@ -16,12 +16,13 @@ class IdeaSeeder extends Seeder
 {
     public function run(): void
     {
-       // 1. Dọn dẹp dữ liệu cũ (Dành cho PostgreSQL)
+        /*
+
         DB::statement('TRUNCATE TABLE reactions RESTART IDENTITY CASCADE');
         DB::statement('TRUNCATE TABLE comments RESTART IDENTITY CASCADE');
         DB::statement('TRUNCATE TABLE ideas RESTART IDENTITY CASCADE');
 
-        // 2. Lấy danh sách ID cần thiết
+
         $staffIds = User::where('role', 'Staff')->pluck('userId')->toArray();
         $categories = [
             'Information Technology' => Category::firstOrCreate(['name' => 'Information Technology'], ['description' => 'IT infrastructure and software.']),
@@ -34,7 +35,6 @@ class IdeaSeeder extends Seeder
             return;
         }
 
-        // --- TẠO FILE VẬT LÝ THẬT TRÊN Ổ CỨNG ---
         if (!Storage::disk('public')->exists('ideas')) {
             Storage::disk('public')->makeDirectory('ideas');
         }
@@ -43,8 +43,8 @@ class IdeaSeeder extends Seeder
         Storage::disk('public')->put('ideas/sample_document.pdf', $dummyContent);
         // ---------------------------------------
 
-        // 3. Danh sách 20 ý tưởng English chuyên nghiệp
-        $ideaData = [
+
+         $ideaData = [
             ['cat' => 'Information Technology', 'title' => 'AI-Driven Code Review Assistant', 'desc' => "Integrate AI into GitHub to automatically review pull requests and catch bugs early."],
             ['cat' => 'Information Technology', 'title' => 'Microservices Architecture Migration', 'desc' => "Transitioning our monolith to Docker/Kubernetes for better scalability."],
             ['cat' => 'Information Technology', 'title' => 'Zero Trust Security Implementation', 'desc' => "Replacing traditional VPNs with a Zero Trust model for remote work security."],
@@ -69,12 +69,12 @@ class IdeaSeeder extends Seeder
             ['cat' => 'Design', 'title' => '3D Virtual Product Showroom', 'desc' => "Using WebGL to allow customers to interact with 3D models online."]
         ];
 
-        // 4. Tiến hành tạo Idea và Comment
+
         foreach ($ideaData as $index => $data) {
             $catId = $categories[$data['cat']]->categoryId;
             $uId = $staffIds[array_rand($staffIds)];
 
-            // Xáo trộn: 1/3 số bài là bài cũ (đã đóng vote)
+
             $createdAt = ($index % 3 == 0)
                 ? Carbon::now()->subWeeks(3)
                 : Carbon::now()->subDays(rand(0, 3))->subHours(rand(1, 10));
@@ -84,14 +84,14 @@ class IdeaSeeder extends Seeder
                 'userId' => $uId,
                 'title' => $data['title'],
                 'description' => $data['desc'],
-                'filePath' => 'ideas/sample_document.pdf', // Trỏ về file thật vừa tạo ở trên
+                'filePath' => 'ideas/sample_document.pdf',
                 'is_anonymous' => (bool)rand(0, 1),
                 'views' => rand(20, 900),
                 'created_at' => $createdAt,
                 'updated_at' => $createdAt,
             ]);
 
-            // Tạo 1-2 bình luận tiếng Anh ngẫu nhiên cho mỗi bài
+
             $sampleComments = ["Great proposal!", "Interesting approach.", "I support this idea.", "We should discuss the cost."];
             for ($i = 0; $i < rand(1, 2); $i++) {
                 Comment::create([
@@ -105,5 +105,6 @@ class IdeaSeeder extends Seeder
         }
 
         $this->command->info('IdeaSeeder: 20 English entries and physical file generated successfully!');
+        */
     }
 }

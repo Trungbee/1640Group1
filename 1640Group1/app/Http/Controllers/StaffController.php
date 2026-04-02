@@ -15,16 +15,16 @@ use Illuminate\Support\Facades\DB;
 
 class StaffController extends Controller
 {
+    //Home staff
     public function home() {
         $userId = Auth::id();
-
-        // 1. Display total ideas from staff
+        // Total idea
         $totalIdeas = Idea::where('userId', $userId)->count();
 
-        // 2. Display total Vote from staff
+        // Total vote
         $totalMyVotes = Reaction::where('userId', $userId)->count();
 
-        // 3. GLOBAL ENGAGEMENT: % Interaction
+        // Total interaction
         $totalSystemIdeas = Idea::count();
 
         $engagementPercentage = 0;
@@ -35,21 +35,25 @@ class StaffController extends Controller
         return view('staff.home', compact('totalIdeas', 'totalMyVotes', 'engagementPercentage'));
     }
 
+    //List of my submission
     public function mySubmissions() {
         $categories = Category::all();
         $myIdeas = Idea::where('userId', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('staff.mySubmissions', compact('categories', 'myIdeas'));
     }
 
+    //Check & setup auth question
     public function authSetup(){
-        $user = User::find(Auth::id());
-        // Kiểm tra nếu đã có active_security_question thì không cần setup lại
-        if (!empty($user->active_security_question)) {
+        $user = Auth::user();
+
+        // Check active_security_question -> return home
+        if ($user && !empty($user->active_security_question)) {
             return redirect()->route('staff.home');
         }
         return view('staff.authSetup');
     }
 
+    //Auth question
     public function authQuestionSetup(Request $request){
         $request->validate([
             'security_question' => ['required', 'in:favorite_animal,favorite_color,child_birth_year'],
@@ -57,18 +61,25 @@ class StaffController extends Controller
             'term'              => ['required']
         ]);
 
-        $user = User::find(Auth::id());
+        $user = Auth::user();
 
         if ($user) {
-            $user->{$request->security_question}  = $request->answer;
-            $user->active_security_question        = $request->security_question;
+
+            $user->favorite_animal = null;
+            $user->favorite_color = null;
+            $user->child_birth_year = null;
+
+            $user->{$request->security_question} = $request->answer;
+            $user->active_security_question      = $request->security_question;
             $user->save();
+
             return redirect()->route('staff.home')->with('success', 'Security question set up successfully!');
         }
 
         return redirect()->route('loginPage');
     }
 
+    // New idea
     public function storeIdea(Request $request)
     {
         $request->validate([
@@ -95,6 +106,7 @@ class StaffController extends Controller
         return redirect()->route('staff.mySubmissions')->with('success', 'Idea submitted successfully!');
     }
 
+    // Sort of Social Media
     public function socialMedia(Request $request)
     {
         $sort = $request->query('sort', 'latest');
@@ -106,7 +118,6 @@ class StaffController extends Controller
             ]);
 
         if ($sort === 'popular') {
-            // Sắp xếp theo hiệu số Like - Dislike
             $query->orderByRaw('(
                 (SELECT COUNT(*) FROM reactions WHERE reactions."ideaId" = ideas."ideaId" AND is_upvote = true) -
                 (SELECT COUNT(*) FROM reactions WHERE reactions."ideaId" = ideas."ideaId" AND is_upvote = false)
@@ -114,19 +125,12 @@ class StaffController extends Controller
         } elseif ($sort === 'viewed') {
             $query->orderBy('views', 'desc');
         } elseif ($sort === 'comments') {
-            $query->addSelect(['last_comment_at' => Comment::select('created_at')
-                ->whereColumn('ideaId', 'ideas.ideaId')
-                ->latest()
-                ->take(1)
-            ]);
-
-            // Sort by priority - new comment -> post date
+            //  Prioritize the newest comment -> create time of the idea
             $query->orderByRaw('GREATEST(
                 COALESCE((SELECT MAX(created_at) FROM comments WHERE comments."ideaId" = ideas."ideaId"), ideas.created_at),
                 ideas.created_at
             ) DESC');
         } else {
-            // Latest Ideas
             $query->orderBy('created_at', 'desc');
         }
 
@@ -136,6 +140,7 @@ class StaffController extends Controller
         return view('staff.socialMedia', compact('ideas', 'myReactions', 'sort'));
     }
 
+    //Save comment
     public function storeComment(Request $request, $ideaId)
     {
         $request->validate([
@@ -152,6 +157,7 @@ class StaffController extends Controller
         return redirect()->back()->with('success', 'Your comment has been posted!');
     }
 
+    //Download idea
     public function downloadIdea($id)
     {
         $idea = Idea::findOrFail($id);
@@ -175,11 +181,10 @@ class StaffController extends Controller
         return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
 
+        //like/dislike
     public function react(Request $request, $id)
     {
         $idea = Idea::findOrFail($id);
-
-        // Check deadline (End of the week of the idea's creation date)
         $deadline = Carbon::parse($idea->created_at)->endOfWeek();
 
         if (now()->greaterThan($deadline)) {
@@ -209,7 +214,7 @@ class StaffController extends Controller
             'downvotes' => Reaction::where('ideaId', $id)->where('is_upvote', false)->count()
         ]);
     }
-
+    // Edit idea
     public function editIdea($id)
     {
         $idea = Idea::findOrFail($id);
@@ -226,6 +231,7 @@ class StaffController extends Controller
         return view('staff.editIdea', compact('idea', 'categories'));
     }
 
+    // Update idea
     public function updateIdea(Request $request, $id)
     {
         $idea = Idea::findOrFail($id);
@@ -256,7 +262,7 @@ class StaffController extends Controller
         $idea->save();
         return redirect()->route('staff.mySubmissions')->with('success', 'Updated successfully!');
     }
-
+    // view
     public function incrementView($ideaId)
     {
         $idea = Idea::find($ideaId);

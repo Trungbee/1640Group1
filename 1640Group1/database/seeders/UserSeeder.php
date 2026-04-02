@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'acceptTerms' => true,
         ]);
 
-        // 2. Staff mẫu
+        // 2. Staff
         User::create([
             'username' => 'staff_test',
             'fullName' => 'John Staff',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             'acceptTerms' => true,
         ]);
 
-        // 3. Staff đã có bảo mật sẵn
+        // 3. Staff
         User::create([
             'username' => 'staff2',
             'fullName' => 'Jane Staff',
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
             'child_birth_year' => '2000'
         ]);
 
-        // 3. Coordinator đã có bảo mật sẵn
+        // 3. Coordinator
         User::create([
             'username' => 'coordinator',
             'fullName' => 'Coordinator Mike',
@@ -60,7 +60,7 @@ class UserSeeder extends Seeder
             'child_birth_year' => '1990'
         ]);
 
-        // 3. Manager đã có bảo mật sẵn
+        // 3. Manager
         User::create([
             'username' => 'qamanager',
             'fullName' => 'manager Steve',

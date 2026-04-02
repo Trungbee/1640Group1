@@ -4,12 +4,12 @@
 <div class="container-fluid">
     <h3 class="fw-bold mb-4"><i class="bi bi-folder2-open"></i> Submitted Ideas Management</h3>
 
-    @if(session('success'))
+    <!--@if(session('success'))
         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
+    @endif-->
 
     <div class="card border-0 shadow-sm mb-5">
         <div class="card-body p-0">

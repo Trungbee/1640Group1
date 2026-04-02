@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <h3 class="fw-bold mb-4"><i class="bi bi-cloud-arrow-up"></i> My Submissions</h3>
 
-    @if(session('success'))
+        <!-- @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -16,7 +16,28 @@
             <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    @endif
+    @endif -->
+
+     <div class="card border-0 shadow-sm mb-5">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3">No.</th>
+                            <th>Idea Title</th>
+                            <th>Category</th>
+                            <th class="text-center">Status</th>
+                            <th>Submitted Date</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be loaded from database -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
     <div class="row g-4 mb-5">
         <div class="col-md-8">
